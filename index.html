@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111a38">
+<meta name="description" content="Welcome to Bicol University Otaku Circle. Read the BUOC Constitution & By-Laws online.">
+<title>BU Otaku Circle — ようこそ!</title>
+<style>
+:root{--ink:#f7f3e9;--muted:#c7cbe0;--navy:#101831;--panel:#192342;--red:#e94b5b;--gold:#e8c777;--line:#4a5274}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#303b69 0,transparent 42%),radial-gradient(ellipse at 90% 35%,#40243f 0,transparent 36%),var(--navy);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:radial-gradient(var(--gold) .7px,transparent .7px);background-size:24px 24px}
+.wrap{width:min(1080px,100% - 32px);margin:auto;position:relative}
+nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid #ffffff20;gap:16px}
+.brand{font-weight:900;letter-spacing:.09em;font-size:.86rem}.brand span{color:var(--gold)}
+.pill{border:1px solid #ffffff40;border-radius:999px;padding:7px 12px;color:var(--muted);font-size:.75rem;letter-spacing:.08em}
+.hero{padding:70px 0 48px;display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
+.kicker{color:var(--gold);letter-spacing:.24em;text-transform:uppercase;font-size:.76rem;font-weight:800}
+h1{font-size:clamp(2.6rem,7vw,5.5rem);line-height:.98;letter-spacing:-.055em;margin:18px 0}
+h1 em{font-style:normal;color:var(--gold)}
+.japanese{font-size:clamp(1.3rem,3vw,2rem);letter-spacing:.12em;color:#f4a5ad;margin:0 0 18px}
+.lead{color:var(--muted);line-height:1.8;max-width:560px;font-size:1.05rem}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+button,.button{appearance:none;border:0;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border-radius:12px;font-weight:850;font-size:.96rem;transition:transform .18s,filter .18s}
+button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.primary{background:var(--red);color:white;box-shadow:0 9px 30px #e94b5b30}
+.secondary{border:1px solid #ffffff35;color:var(--ink);background:#ffffff0a}
+.art{min-height:330px;display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #ffffff25;border-radius:28px;background:linear-gradient(145deg,#ffffff12,#ffffff03);box-shadow:0 25px 80px #0003}
+.sun{width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,#ffd9a0,#e94b5b);box-shadow:0 0 75px #e94b5b55;position:absolute;top:42px}
+.gate{position:relative;width:190px;height:150px;margin-top:100px;z-index:1}
+.gate:before,.gate:after{content:"";position:absolute;background:#a82945;box-shadow:inset 0 -5px #641c38}
+.gate:before{height:16px;width:220px;left:-15px;top:18px;border-radius:4px;transform:skewY(-2deg)}
+.gate:after{height:13px;width:200px;left:-5px;top:35px}
+.post{position:absolute;top:38px;width:18px;height:112px;background:linear-gradient(90deg,#7d203e,#d54857,#8d233f);border-radius:3px}
+.post.left{left:20px}.post.right{right:20px}
+.cross{position:absolute;top:78px;left:33px;width:124px;height:10px;background:#e8c777}
+.stamp{position:absolute;right:22px;bottom:20px;border:1px solid var(--gold);color:var(--gold);padding:8px 11px;transform:rotate(-7deg);font-size:.72rem;letter-spacing:.16em}
+.sakura{position:absolute;color:#ffc5d1;font-size:24px;opacity:.9}.s1{top:30px;left:30px}.s2{top:80px;right:36px}.s3{bottom:60px;left:44px}.s4{bottom:34px;right:100px}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 0 58px}
+.info article{background:#ffffff08;border:1px solid #ffffff18;border-radius:16px;padding:20px}
+.info strong{display:block;color:var(--gold);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px}
+.info p{margin:0;color:var(--muted);line-height:1.65;font-size:.93rem}
+#reader{display:none;padding:20px 0 64px;scroll-margin-top:18px}
+#reader.open{display:block}
+.reader-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.reader-head h2{margin:0;font-size:clamp(1.4rem,4vw,2rem)}
+.reader-note{color:var(--muted);font-size:.9rem;margin:7px 0 16px}
+.pdf-shell{border:1px solid #ffffff30;border-radius:16px;overflow:hidden;background:#fff}
+iframe{display:block;width:100%;height:min(82vh,1000px);min-height:600px;border:0;background:#fff}
+footer{border-top:1px solid #ffffff20;padding:24px 0 32px;color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer span:last-child{color:var(--gold)}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding:48px 0 30px}.art{min-height:260px;grid-row:1}.sun{width:135px;height:135px;top:26px}.gate{transform:scale(.82);margin-top:75px}.info{grid-template-columns:1fr;padding-bottom:40px}.pill{display:none}iframe{height:78vh;min-height:500px}nav{padding:17px 0}}
+@media(prefers-reduced-motion:no-preference){.sakura{animation:float 5s ease-in-out infinite}.s2{animation-delay:1s}.s3{animation-delay:2s}.s4{animation-delay:1.5s}@keyframes float{50%{transform:translateY(-10px) rotate(12deg)}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><div class="brand">BU <span>OTAKU CIRCLE</span></div><div class="pill">BICOL UNIVERSITY · AY 2026–2027</div></nav>
+<main>
+<section class="hero" id="welcome">
+<div>
+<div class="kicker">Welcome to our circle</div>
+<h1>Welcome to<br><em>Bicol University</em><br>Otaku Circle</h1>
+<p class="japanese" lang="ja">ようこそ、BUOCへ！</p>
+<p class="lead">A place for anime, cosplay, art, games, and Japanese culture. Explore the principles and guidelines that shape our community.</p>
+<div class="actions">
+<button class="primary" id="viewBtn" type="button">📜 View Constitution &amp; By-Laws <span aria-hidden="true">↘</span></button>
+<a class="button secondary" href="#about">Explore BUOC ↓</a>
+</div>
+</div>
+<div class="art" aria-label="Japanese-inspired illustration of a torii gate and rising sun" role="img">
+<div class="sun"></div><div class="gate"><div class="post left"></div><div class="post right"></div><div class="cross"></div></div>
+<span class="sakura s1">✿</span><span class="sakura s2">✿</span><span class="sakura s3">✿</span><span class="sakura s4">✿</span>
+<div class="stamp">文化 · COMMUNITY</div>
+</div>
+</section>
+<section class="info" id="about">
+<article><strong>Our circle</strong><p>BUOC brings together students who share an interest in anime and Japanese culture.</p></article>
+<article><strong>Our community</strong><p>Creativity, camaraderie, and participation help our members grow together.</p></article>
+<article><strong>Our constitution</strong><p>Read the organization's Constitution &amp; By-Laws right here, in the same page.</p></article>
+</section>
+<section id="reader" aria-labelledby="readerTitle">
+<div class="reader-head"><h2 id="readerTitle">Constitution &amp; By-Laws</h2><button class="secondary" id="closeBtn" type="button">Close reader ✕</button></div>
+<p class="reader-note">BU Otaku Circle · Academic Year 2026–2027 · Scroll or use the PDF viewer controls to read all 17 pages.</p>
+<div class="pdf-shell"><iframe title="Bicol University Otaku Circle Constitution and By-Laws" src="assets/BUOC_CBL_Clean.pdf#toolbar=1&navpanes=0&view=FitH" loading="lazy"></iframe></div>
+</section>
+</main>
+<footer><span>© Bicol University Otaku Circle</span><span>好きなものを、好きでいよう。 · Keep loving what you love.</span></footer>
+</div>
+<script>
+const reader=document.getElementById('reader');
+document.getElementById('viewBtn').addEventListener('click',()=>{reader.classList.add('open');reader.scrollIntoView({behavior:'smooth',block:'start'});});
+document.getElementById('closeBtn').addEventListener('click',()=>{reader.classList.remove('open');document.getElementById('welcome').scrollIntoView({behavior:'smooth',block:'start'});});
+</script>
+</body>
+</html>
