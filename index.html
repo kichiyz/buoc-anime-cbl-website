@@ -48,10 +48,22 @@ button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
 .reader-head h2{margin:0;font-size:clamp(1.4rem,4vw,2rem)}
 .reader-note{color:var(--muted);font-size:.9rem;margin:7px 0 16px}
 .pdf-shell{border:1px solid #ffffff30;border-radius:16px;overflow:hidden;background:#fff}
-iframe{display:block;width:100%;height:min(82vh,1000px);min-height:600px;border:0;background:#fff}
+/* PDF.js page stack avoids the single-page/scrolling limitations of iOS Safari's PDF iframe. */
+.pdf-shell{overflow:visible;background:#e9edf6;padding:clamp(8px,2vw,18px);}
+.pdf-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:#192342}
+.pdf-toolbar .button,.pdf-toolbar button{padding:10px 14px;font-size:.88rem}
+.pdf-status{color:#192342;font-size:.9rem;min-width:0;overflow-wrap:anywhere}
+.pdf-pages{display:grid;gap:16px;justify-items:center;width:100%;}
+.pdf-page{display:block;width:100%;max-width:100%;height:auto;background:#fff;box-shadow:0 3px 14px #0002;border:1px solid #c7ccda;}
+.pdf-page-wrap{width:100%;max-width:900px;min-width:0;}
+.pdf-page-label{color:#34405e;font-size:.78rem;text-align:center;padding:5px 0 0}
+.pdf-fallback{color:#192342;background:#fff;border-radius:10px;padding:16px;line-height:1.6}
+.pdf-fallback a{color:#123d91;font-weight:700}
+button:focus-visible,.button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:760px){.pdf-shell{padding:8px;border-radius:12px}.pdf-page-wrap{width:100%;}.pdf-toolbar{align-items:stretch}.pdf-toolbar .button,.pdf-toolbar button{flex:1}.pdf-status{width:100%}}
 footer{border-top:1px solid #ffffff20;padding:24px 0 32px;color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer span:last-child{color:var(--gold)}
-@media(max-width:760px){.hero{grid-template-columns:1fr;padding:48px 0 30px}.art{min-height:260px;grid-row:1}.sun{width:135px;height:135px;top:26px}.gate{transform:scale(.82);margin-top:75px}.info{grid-template-columns:1fr;padding-bottom:40px}.pill{display:none}iframe{height:78vh;min-height:500px}nav{padding:17px 0}}
+@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr);padding:36px 0 30px;gap:22px}.hero>div{min-width:0}.art{min-height:230px;width:100%;max-width:100%;grid-row:1;isolation:isolate}.sun{width:120px;height:120px;top:22px}.gate{transform:scale(.72);transform-origin:top center;margin-top:78px}.stamp{right:12px;bottom:12px;font-size:.65rem}.s1{top:20px;left:18px}.s2{top:56px;right:18px}.s3{bottom:44px;left:20px}.s4{bottom:22px;right:72px}.info{grid-template-columns:minmax(0,1fr);padding-bottom:40px}.pill{display:none}nav{padding:17px 0}.actions>*{max-width:100%;text-align:center}.actions button{line-height:1.35;white-space:normal}.lead{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:no-preference){.sakura{animation:float 5s ease-in-out infinite}.s2{animation-delay:1s}.s3{animation-delay:2s}.s4{animation-delay:1.5s}@keyframes float{50%{transform:translateY(-10px) rotate(12deg)}}}
 </style>
 </head>
@@ -84,15 +96,65 @@ footer span:last-child{color:var(--gold)}
 <section id="reader" aria-labelledby="readerTitle">
 <div class="reader-head"><h2 id="readerTitle">Constitution &amp; By-Laws</h2><button class="secondary" id="closeBtn" type="button">Close reader ✕</button></div>
 <p class="reader-note">BU Otaku Circle · Academic Year 2026–2027 · Scroll or use the PDF viewer controls to read all 17 pages.</p>
-<div class="pdf-shell"><iframe title="Bicol University Otaku Circle Constitution and By-Laws" src="assets/BUOC_CBL_Clean.pdf#toolbar=1&navpanes=0&view=FitH" loading="lazy"></iframe></div>
+<div class="pdf-shell">
+<div class="pdf-toolbar">
+  <div class="pdf-status" id="pdfStatus" role="status" aria-live="polite">Preparing the 17-page document…</div>
+  <a class="button secondary" href="assets/BUOC_CBL_Clean.pdf" target="_blank" rel="noopener">Open PDF separately ↗</a>
+  <a class="button primary" href="assets/BUOC_CBL_Clean.pdf" download="BUOC_CBL_Clean.pdf">Download PDF ↓</a>
+</div>
+<div class="pdf-fallback" id="pdfFallback" hidden>Unable to display the document inline. You can still <a href="assets/BUOC_CBL_Clean.pdf" target="_blank" rel="noopener">open the original PDF</a> or <a href="assets/BUOC_CBL_Clean.pdf" download="BUOC_CBL_Clean.pdf">download it here</a>.</div>
+<div class="pdf-pages" id="pdfPages" aria-label="Constitution and By-Laws pages"></div>
+<noscript><p class="pdf-fallback">JavaScript is required to display the pages here. <a href="assets/BUOC_CBL_Clean.pdf">Open the original PDF</a>.</p></noscript>
+</div>
 </section>
 </main>
 <footer><span>© Bicol University Otaku Circle</span><span>好きなものを、好きでいよう。 · Keep loving what you love.</span></footer>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 const reader=document.getElementById('reader');
 document.getElementById('viewBtn').addEventListener('click',()=>{reader.classList.add('open');reader.scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('closeBtn').addEventListener('click',()=>{reader.classList.remove('open');document.getElementById('welcome').scrollIntoView({behavior:'smooth',block:'start'});});
+
+// Render every PDF page into the document flow instead of relying on Safari's native iframe viewer.
+(async function renderCBL(){
+  const status=document.getElementById('pdfStatus');
+  const pages=document.getElementById('pdfPages');
+  const fallback=document.getElementById('pdfFallback');
+  if(!window.pdfjsLib){status.textContent='Inline PDF viewer could not load.';fallback.hidden=false;return;}
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  try{
+    const pdf=await pdfjsLib.getDocument({url:'assets/BUOC_CBL_Clean.pdf'}).promise;
+    status.textContent=`Loading ${pdf.numPages} pages…`;
+    for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+      const page=await pdf.getPage(pageNumber);
+      const base=page.getViewport({scale:1});
+      const availableWidth=Math.max(240,Math.min(pages.clientWidth||900,900));
+      const scale=Math.min(2,availableWidth/base.width);
+      const viewport=page.getViewport({scale});
+      const wrapper=document.createElement('div');
+      wrapper.className='pdf-page-wrap';
+      const canvas=document.createElement('canvas');
+      canvas.className='pdf-page';
+      canvas.setAttribute('role','img');
+      canvas.setAttribute('aria-label',`Page ${pageNumber} of ${pdf.numPages}`);
+      canvas.width=Math.floor(viewport.width);
+      canvas.height=Math.floor(viewport.height);
+      canvas.style.aspectRatio=`${viewport.width} / ${viewport.height}`;
+      const context=canvas.getContext('2d',{alpha:false});
+      await page.render({canvasContext:context,viewport}).promise;
+      const label=document.createElement('div');
+      label.className='pdf-page-label';label.textContent=`Page ${pageNumber} of ${pdf.numPages}`;
+      wrapper.append(canvas,label);pages.append(wrapper);
+      status.textContent=`Rendered ${pageNumber} of ${pdf.numPages} pages`;
+    }
+    status.textContent=`All ${pdf.numPages} pages loaded. Scroll down to continue reading.`;
+  }catch(error){
+    console.error('Unable to render BUOC CBL PDF:',error);
+    status.textContent='The inline viewer could not load the PDF.';
+    fallback.hidden=false;
+  }
+})();
 </script>
 </body>
 </html>
