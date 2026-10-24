@@ -3,15 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#5b1022">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#101831">
 <meta name="description" content="Welcome to Bicol University Otaku Circle. Read the BUOC Constitution & By-Laws online.">
 <title>BU Otaku Circle — ようこそ!</title>
 <style>
-:root{--ink:#fff7f3;--muted:#f0cfd5;--navy:#250914;--panel:#451222;--red:#e94b5b;--red-dark:#8f1d38;--red-light:#ff9da8;--gold:#f0c777;--line:#783047;--focus:#ffe5a8}
+:root{--ink:#f7f3e9;--muted:#c7cbe0;--navy:#101831;--panel:#192342;--red:#e94b5b;--gold:#e8c777;--line:#4a5274}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(ellipse at 15% 0%,#68213b 0,transparent 42%),radial-gradient(ellipse at 90% 35%,#4a172d 0,transparent 36%),var(--navy);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#303b69 0,transparent 42%),radial-gradient(ellipse at 90% 35%,#40243f 0,transparent 36%),var(--navy);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:radial-gradient(var(--gold) .7px,transparent .7px);background-size:24px 24px}
 .wrap{width:min(1080px,100% - 32px);margin:auto;position:relative}
 nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid #ffffff20;gap:16px}
@@ -21,25 +20,50 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0
 .kicker{color:var(--gold);letter-spacing:.24em;text-transform:uppercase;font-size:.76rem;font-weight:800}
 h1{font-size:clamp(2.6rem,7vw,5.5rem);line-height:.98;letter-spacing:-.055em;margin:18px 0}
 h1 em{font-style:normal;color:var(--gold)}
-.japanese{font-size:clamp(1.3rem,3vw,2rem);letter-spacing:.12em;color:var(--red-light);margin:0 0 18px}
+.japanese{font-size:clamp(1.3rem,3vw,2rem);letter-spacing:.12em;color:#f4a5ad;margin:0 0 18px}
 .lead{color:var(--muted);line-height:1.8;max-width:560px;font-size:1.05rem}
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 button,.button{appearance:none;border:0;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border-radius:12px;font-weight:850;font-size:.96rem;transition:transform .18s,filter .18s}
 button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
-.primary{background:linear-gradient(135deg,#ef5263,#a82042);color:#fff;box-shadow:0 9px 30px #e94b5b45}
+.primary{background:var(--red);color:white;box-shadow:0 9px 30px #e94b5b30}
 .secondary{border:1px solid #ffffff35;color:var(--ink);background:#ffffff0a}
 .art{min-height:330px;display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #ffffff25;border-radius:28px;background:linear-gradient(145deg,#ffffff12,#ffffff03);box-shadow:0 25px 80px #0003}
-.sun{width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,#ffe0a3,#e94b5b);box-shadow:0 0 75px #e94b5b55;position:absolute;top:42px}
+.sun{width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,#ffd9a0,#e94b5b);box-shadow:0 0 75px #e94b5b55;position:absolute;top:42px}
 .gate{position:relative;width:190px;height:150px;margin-top:100px;z-index:1}
 .gate:before,.gate:after{content:"";position:absolute;background:#a82945;box-shadow:inset 0 -5px #641c38}
 .gate:before{height:16px;width:220px;left:-15px;top:18px;border-radius:4px;transform:skewY(-2deg)}
 .gate:after{height:13px;width:200px;left:-5px;top:35px}
 .post{position:absolute;top:38px;width:18px;height:112px;background:linear-gradient(90deg,#7d203e,#d54857,#8d233f);border-radius:3px}
 .post.left{left:20px}.post.right{right:20px}
-.cross{position:absolute;top:78px;left:33px;width:124px;height:10px;background:#f0c777}
+.cross{position:absolute;top:78px;left:33px;width:124px;height:10px;background:#e8c777}
 .stamp{position:absolute;right:22px;bottom:20px;border:1px solid var(--gold);color:var(--gold);padding:8px 11px;transform:rotate(-7deg);font-size:.72rem;letter-spacing:.16em}
 .sakura{position:absolute;color:#ffc5d1;font-size:24px;opacity:.9}.s1{top:30px;left:30px}.s2{top:80px;right:36px}.s3{bottom:60px;left:44px}.s4{bottom:34px;right:100px}
-.info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 0 58px;overflow:hidden;max-height:700px;opacity:1;transform:translateY(0);transition:max-height .42s ease,opacity .32s ease,transform .42s ease,padding .42s ease}.info.collapsed{max-height:0;opacity:0;transform:translateY(-10px);padding-top:0;padding-bottom:0;pointer-events:none}.info article{min-width:0}
+.explore-panel{display:none;padding:12px 0 58px;scroll-margin-top:18px;opacity:0;transform:translateY(-10px) scale(.99)}
+.explore-panel.open{display:block;animation:panelIn .42s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes panelIn{to{opacity:1;transform:translateY(0) scale(1)}}
+.explore-intro{background:linear-gradient(135deg,#ffffff0d,#ffffff04);border:1px solid #ffffff20;border-radius:20px;padding:clamp(18px,4vw,30px);margin-bottom:18px}
+.explore-intro h2,.committee-section h2{margin:0 0 10px;font-size:clamp(1.5rem,4vw,2.2rem)}
+.explore-intro p{color:var(--muted);line-height:1.75;margin:0;max-width:780px}
+.explore-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.committee-section{margin-top:30px}
+.committee-section .section-note{color:var(--muted);line-height:1.7;margin:0 0 18px}
+.committee-grid{display:grid;grid-template-columns:repeat( auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+.committee-card{appearance:none;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-height:225px;padding:20px;border:1px solid #ffffff20;border-radius:18px;background:linear-gradient(145deg,#ffffff10,#ffffff04);color:var(--ink);cursor:pointer;transition:transform .25s,border-color .25s,background .25s;}
+.committee-card:hover{transform:translateY(-4px);border-color:#e94b5b99;background:linear-gradient(145deg,#e94b5b1a,#ffffff05)}
+.committee-logo{width:58px;height:58px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(145deg,#e94b5b,#92253f);box-shadow:0 8px 25px #e94b5b2b;color:white;font-size:1.45rem;font-weight:950;letter-spacing:-.04em;border:1px solid #ffc0c855}
+.committee-card h3{font-size:1.08rem;line-height:1.35;margin:0}.committee-card p{color:var(--muted);line-height:1.6;font-size:.9rem;margin:0}.card-cta{color:var(--gold);font-size:.8rem;font-weight:800;letter-spacing:.06em;margin-top:auto}
+.officers-coming{margin-top:24px;border:1px dashed #e8c77780;border-radius:18px;padding:22px;display:flex;align-items:center;gap:16px;background:#e8c77708}
+.coming-icon{font-size:1.8rem}.officers-coming h3{margin:0 0 5px}.officers-coming p{margin:0;color:var(--muted);line-height:1.6}
+.modal-backdrop{position:fixed;inset:0;z-index:1000;background:#070b19cc;backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-backdrop.open{display:flex;animation:fadeBackdrop .2s ease-out}
+.committee-modal{width:min(760px,100%);max-height:min(88vh,900px);overflow:auto;border:1px solid #ffffff2e;border-radius:24px;background:radial-gradient(ellipse at 100% 0%,#67253d55,transparent 42%),#121b36;color:var(--ink);box-shadow:0 30px 100px #0009;transform:translateY(18px) scale(.96);opacity:0;animation:modalMorph .38s cubic-bezier(.2,.85,.2,1) forwards}
+@keyframes fadeBackdrop{from{opacity:0}to{opacity:1}}
+@keyframes modalMorph{to{transform:translateY(0) scale(1);opacity:1}}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:22px 22px 0}.modal-close{background:#ffffff12;color:var(--ink);border:1px solid #ffffff25;padding:9px 12px;border-radius:10px}
+.modal-body{padding:18px 22px 26px}.modal-hero{display:flex;align-items:center;gap:16px;margin-bottom:20px}.modal-hero .committee-logo{width:72px;height:72px;flex-shrink:0}.modal-hero h2{margin:0 0 5px;font-size:clamp(1.4rem,4vw,2rem)}.modal-hero p{margin:0;color:var(--muted);line-height:1.55}
+.detail-block{border-top:1px solid #ffffff1c;padding:17px 0}.detail-block h3{color:var(--gold);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 9px}.detail-block p,.detail-block li{color:#d5d9e8;line-height:1.7}.detail-block p{margin:0}.detail-block ul{margin:0;padding-left:20px}.leaders-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.leader-card{border:1px solid #ffffff1c;border-radius:14px;padding:14px;background:#ffffff06}.leader-photo{width:100%;aspect-ratio:4/3;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#242f53,#171e37);border:1px dashed #ffffff35;color:var(--gold);font-weight:800;font-size:.82rem;text-align:center;padding:10px;margin-bottom:10px}.leader-card strong{display:block}.leader-card span{font-size:.85rem;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.explore-panel.open,.committee-modal,.modal-backdrop{animation:none!important}.committee-card{transition:none}}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 0 58px}
 .info article{background:#ffffff08;border:1px solid #ffffff18;border-radius:16px;padding:20px}
 .info strong{display:block;color:var(--gold);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px}
 .info p{margin:0;color:var(--muted);line-height:1.65;font-size:.93rem}
@@ -51,36 +75,26 @@ button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
 .pdf-shell{border:1px solid #ffffff30;border-radius:16px;overflow:hidden;background:#fff}
 /* PDF.js page stack avoids the single-page/scrolling limitations of iOS Safari's PDF iframe. */
 .pdf-shell{overflow:visible;background:#e9edf6;padding:clamp(8px,2vw,18px);}
-.pdf-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:#192342;background:#e9edf6;border:1px solid #c7ccda;border-radius:10px;padding:10px}
-.pdf-toolbar .button,.pdf-toolbar button{padding:10px 14px;font-size:.88rem}.pdf-toolbar .secondary{background:#ffffff;color:#182544;border:2px solid #354a70;box-shadow:0 2px 5px #10183118}.pdf-toolbar .secondary:hover{background:#f3f6fc;border-color:#182544}.pdf-toolbar .primary{background:linear-gradient(135deg,#ef5263,#a82042);color:#fff;border:2px solid #8f1d38}.pdf-toolbar .button:focus-visible{outline:3px solid #a82042;outline-offset:3px}
-.pdf-status{color:#192342;font-size:.9rem;min-width:0;overflow-wrap:anywhere;font-weight:650}
+.pdf-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:#192342}
+.pdf-toolbar .button,.pdf-toolbar button{padding:10px 14px;font-size:.88rem}
+.pdf-status{color:#192342;font-size:.9rem;min-width:0;overflow-wrap:anywhere}
 .pdf-pages{display:grid;gap:16px;justify-items:center;width:100%;}
 .pdf-page{display:block;width:100%;max-width:100%;height:auto;background:#fff;box-shadow:0 3px 14px #0002;border:1px solid #c7ccda;}
 .pdf-page-wrap{width:100%;max-width:900px;min-width:0;}
 .pdf-page-label{color:#34405e;font-size:.78rem;text-align:center;padding:5px 0 0}
 .pdf-fallback{color:#192342;background:#fff;border-radius:10px;padding:16px;line-height:1.6}
 .pdf-fallback a{color:#123d91;font-weight:700}
-button:focus-visible,.button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-button:disabled{opacity:.55;cursor:wait;transform:none}
-[hidden]{display:none!important}
-.pdf-page{max-width:100%;height:auto;aspect-ratio:var(--page-ratio, .707);}
-.pdf-page-wrap{contain:layout paint;}
-.pdf-page-placeholder{width:100%;aspect-ratio:var(--page-ratio, .707);background:linear-gradient(90deg,#e2e8f2,#f7f9fc,#e2e8f2);border:1px solid #c7ccda;border-radius:2px;display:grid;place-items:center;color:#52617e;font-size:.85rem}
-.pdf-toolbar a{white-space:normal;text-align:center}
-html{scroll-padding-top:16px}
-@media(prefers-reduced-motion:reduce){.info{transition:none}html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+button:focus-visible,.button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 @media(max-width:760px){.pdf-shell{padding:8px;border-radius:12px}.pdf-page-wrap{width:100%;}.pdf-toolbar{align-items:stretch}.pdf-toolbar .button,.pdf-toolbar button{flex:1}.pdf-status{width:100%}}
 footer{border-top:1px solid #ffffff20;padding:24px 0 32px;color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer span:last-child{color:var(--gold)}
-@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr);padding:36px 0 30px;gap:22px}.hero>div{min-width:0}.art{min-height:230px;width:100%;max-width:100%;grid-row:1;isolation:isolate}.sun{width:120px;height:120px;top:22px}.gate{transform:scale(.72);transform-origin:top center;margin-top:78px}.stamp{right:12px;bottom:12px;font-size:.65rem}.s1{top:20px;left:18px}.s2{top:56px;right:18px}.s3{bottom:44px;left:20px}.s4{bottom:22px;right:72px}.info{grid-template-columns:minmax(0,1fr);padding-bottom:40px}.pill{display:none}nav{padding:17px 0}.actions>*{max-width:100%;text-align:center}.actions button{line-height:1.35;white-space:normal}.lead{overflow-wrap:anywhere}}
+@media(max-width:760px){.leaders-grid{grid-template-columns:minmax(0,1fr)}.modal-top{padding:17px 17px 0}.modal-body{padding:16px 17px 22px}.modal-hero{align-items:flex-start}.explore-actions>*{width:100%}.hero{grid-template-columns:minmax(0,1fr);padding:36px 0 30px;gap:22px}.hero>div{min-width:0}.art{min-height:230px;width:100%;max-width:100%;grid-row:1;isolation:isolate}.sun{width:120px;height:120px;top:22px}.gate{transform:scale(.72);transform-origin:top center;margin-top:78px}.stamp{right:12px;bottom:12px;font-size:.65rem}.s1{top:20px;left:18px}.s2{top:56px;right:18px}.s3{bottom:44px;left:20px}.s4{bottom:22px;right:72px}.info{grid-template-columns:minmax(0,1fr);padding-bottom:40px}.pill{display:none}nav{padding:17px 0}.actions>*{max-width:100%;text-align:center}.actions button{line-height:1.35;white-space:normal}.lead{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:no-preference){.sakura{animation:float 5s ease-in-out infinite}.s2{animation-delay:1s}.s3{animation-delay:2s}.s4{animation-delay:1.5s}@keyframes float{50%{transform:translateY(-10px) rotate(12deg)}}}
-@media(max-width:420px){.wrap{width:calc(100% - 24px)}h1{font-size:clamp(2.25rem,11vw,3.2rem);overflow-wrap:normal}.kicker{letter-spacing:.16em}.actions{flex-direction:column;align-items:stretch}.actions .button,.actions button{width:100%}.reader-head{align-items:flex-start}.pdf-toolbar{display:grid;grid-template-columns:minmax(0,1fr)}.pdf-toolbar .button{width:100%}.pdf-shell{padding:6px}.pdf-page-wrap{max-width:100%;overflow:hidden}}
-@media(min-width:761px) and (max-width:1000px){.hero{gap:22px}.art{min-width:0}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav><a class="brand" href="#welcome" aria-label="BU Otaku Circle home" style="color:inherit;text-decoration:none">BU <span>OTAKU CIRCLE</span></a><div class="pill">BICOL UNIVERSITY · AY 2026–2027</div></nav>
+<nav><div class="brand">BU <span>OTAKU CIRCLE</span></div><div class="pill">BICOL UNIVERSITY · AY 2026–2027</div></nav>
 <main>
 <section class="hero" id="welcome">
 <div>
@@ -89,8 +103,7 @@ footer span:last-child{color:var(--gold)}
 <p class="japanese" lang="ja">ようこそ、BUOCへ！</p>
 <p class="lead">A place for anime, cosplay, art, games, and Japanese culture. Explore the principles and guidelines that shape our community.</p>
 <div class="actions">
-<button class="primary" id="viewBtn" type="button" aria-controls="reader" aria-expanded="false">📜 View Constitution &amp; By-Laws <span aria-hidden="true">↘</span></button>
-<button class="secondary" id="exploreBtn" type="button" aria-controls="about" aria-expanded="false">Explore BUOC <span aria-hidden="true">＋</span></button>
+<button class="primary" id="exploreBtn" type="button" aria-expanded="false" aria-controls="about">Explore BUOC ↓</button>
 </div>
 </div>
 <div class="art" aria-label="Japanese-inspired illustration of a torii gate and rising sun" role="img">
@@ -99,17 +112,31 @@ footer span:last-child{color:var(--gold)}
 <div class="stamp">文化 · COMMUNITY</div>
 </div>
 </section>
-<section class="info collapsed" id="about" aria-hidden="true">
-<article><strong>Our circle</strong><p>BUOC brings together students who share an interest in anime and Japanese culture.</p></article>
-<article><strong>Our community</strong><p>Creativity, camaraderie, and participation help our members grow together.</p></article>
-<article><strong>Our constitution</strong><p>Read the organization's Constitution &amp; By-Laws right here, in the same page.</p></article>
+<section class="explore-panel" id="about" aria-labelledby="exploreTitle">
+<div class="explore-intro">
+<h2 id="exploreTitle">Explore BUOC</h2>
+<p>Discover the committees that help the Bicol University Otaku Circle organize its records, finances, events, membership, and fundraising. Committee functions below are based on the BUOC Constitution &amp; By-Laws; short advocacy statements are summaries written for this website.</p>
+<div class="explore-actions"><button class="primary" id="viewBtn" type="button">📜 View Constitution &amp; By-Laws <span aria-hidden="true">↘</span></button><button class="secondary" id="closeExploreBtn" type="button">Collapse Explore ✕</button></div>
+</div>
+<div class="committee-section">
+<h2>Our Committees</h2>
+<p class="section-note">Select a committee to learn about its advocacy, objectives, official functions, and leadership. Committee logos below are website-created visual marks, not official submitted logos.</p>
+<div class="committee-grid">
+<button class="committee-card" type="button" data-committee="secretariat"><span class="committee-logo" aria-hidden="true">文</span><h3>Secretariat Committee</h3><p>Records, documentation, and clear communication across the organization.</p><span class="card-cta">EXPLORE COMMITTEE ↗</span></button>
+<button class="committee-card" type="button" data-committee="finance"><span class="committee-logo" aria-hidden="true">¥</span><h3>Finance Committee</h3><p>Responsible financial management and member-focused use of funds.</p><span class="card-cta">EXPLORE COMMITTEE ↗</span></button>
+<button class="committee-card" type="button" data-committee="planning"><span class="committee-logo" aria-hidden="true">企</span><h3>Planning Committee</h3><p>Collaborative planning and execution of BUOC projects and activities.</p><span class="card-cta">EXPLORE COMMITTEE ↗</span></button>
+<button class="committee-card" type="button" data-committee="prhr"><span class="committee-logo" aria-hidden="true">和</span><h3>Public Relations &amp; Human Relations (PR-HR)</h3><p>Membership processes, information sharing, and a welcoming community.</p><span class="card-cta">EXPLORE COMMITTEE ↗</span></button>
+<button class="committee-card" type="button" data-committee="ways"><span class="committee-logo" aria-hidden="true">商</span><h3>Ways and Means Committee</h3><p>Fundraising efforts that help support the organization's activities.</p><span class="card-cta">EXPLORE COMMITTEE ↗</span></button>
+</div>
+<div class="officers-coming"><div class="coming-icon" aria-hidden="true">✦</div><div><h3>BUOC Officers Directory <span class="pill">COMING SOON</span></h3><p>The Officers Directory is being prepared. Official officer profiles and photographs will be added once the directory is finalized.</p></div></div>
+</div>
 </section>
 <section id="reader" aria-labelledby="readerTitle">
 <div class="reader-head"><h2 id="readerTitle">Constitution &amp; By-Laws</h2><button class="secondary" id="closeBtn" type="button">Close reader ✕</button></div>
-<p class="reader-note">BU Otaku Circle · Academic Year 2026–2027 · Scroll to read the document. Pages load as you approach them to help performance on mobile devices.</p>
+<p class="reader-note">BU Otaku Circle · Academic Year 2026–2027 · Scroll or use the PDF viewer controls to read all 17 pages.</p>
 <div class="pdf-shell">
 <div class="pdf-toolbar">
-  <div class="pdf-status" id="pdfStatus" role="status" aria-live="polite">Open the reader to load the Constitution &amp; By-Laws.</div>
+  <div class="pdf-status" id="pdfStatus" role="status" aria-live="polite">Preparing the 17-page document…</div>
   <a class="button secondary" href="assets/BUOC_CBL_Clean.pdf" target="_blank" rel="noopener">Open PDF separately ↗</a>
   <a class="button primary" href="assets/BUOC_CBL_Clean.pdf" download="BUOC_CBL_Clean.pdf">Download PDF ↓</a>
 </div>
@@ -119,253 +146,82 @@ footer span:last-child{color:var(--gold)}
 </div>
 </section>
 </main>
+<div class="modal-backdrop" id="committeeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+<div class="committee-modal" role="document"><div class="modal-top"><span class="kicker">BUOC · COMMITTEE PROFILE</span><button class="modal-close" id="modalClose" type="button" aria-label="Close committee profile">Close ✕</button></div><div class="modal-body" id="modalBody"></div></div>
+</div>
 <footer><span>© Bicol University Otaku Circle</span><span>好きなものを、好きでいよう。 · Keep loving what you love.</span></footer>
 </div>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-const reader = document.getElementById('reader');
-const viewButton = document.getElementById('viewBtn');
-const closeButton = document.getElementById('closeBtn');
-const exploreButton = document.getElementById('exploreBtn');
-const aboutSection = document.getElementById('about');
-const status = document.getElementById('pdfStatus');
-const pagesContainer = document.getElementById('pdfPages');
-const fallback = document.getElementById('pdfFallback');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const scrollBehavior = () => reduceMotion.matches ? 'auto' : 'smooth';
-let pdfDocument = null;
-let loadingTask = null;
-let viewerStarted = false;
-let pageObserver = null;
-let resizeTimer = null;
-const pageStates = new Map();
-const MAX_RENDERED_CANVASES = 3;
+const reader=document.getElementById('reader');
+const explore=document.getElementById('about');
+const exploreBtn=document.getElementById('exploreBtn');
+function openExplore(){explore.classList.add('open');exploreBtn.setAttribute('aria-expanded','true');setTimeout(()=>explore.scrollIntoView({behavior:'smooth',block:'start'}),30);}
+function closeExplore(){explore.classList.remove('open');exploreBtn.setAttribute('aria-expanded','false');document.getElementById('welcome').scrollIntoView({behavior:'smooth',block:'start'});}
+exploreBtn.addEventListener('click',()=>explore.classList.contains('open')?closeExplore():openExplore());
+document.getElementById('closeExploreBtn').addEventListener('click',closeExplore);
+document.getElementById('viewBtn').addEventListener('click',()=>{reader.classList.add('open');reader.scrollIntoView({behavior:'smooth',block:'start'});});
+document.getElementById('closeBtn').addEventListener('click',()=>{reader.classList.remove('open');explore.scrollIntoView({behavior:'smooth',block:'start'});});
 
-viewButton.addEventListener('click', async () => {
-  const isOpen = reader.classList.contains('open');
-  if (isOpen) {
-    reader.classList.remove('open');
-    reader.setAttribute('aria-hidden', 'true');
-    viewButton.setAttribute('aria-expanded', 'false');
-    viewButton.innerHTML = '📜 View Constitution &amp; By-Laws <span aria-hidden="true">↘</span>';
-    document.getElementById('welcome').scrollIntoView({behavior:scrollBehavior(), block:'start'});
-    return;
-  }
-  reader.classList.add('open');
-  reader.setAttribute('aria-hidden', 'false');
-  viewButton.setAttribute('aria-expanded', 'true');
-  viewButton.innerHTML = '📜 Hide Constitution &amp; By-Laws <span aria-hidden="true">↗</span>';
-  // Wait for the visible layout to be calculated before PDF.js measures page widths.
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    reader.scrollIntoView({behavior:scrollBehavior(), block:'start'});
-  }));
-  if (!viewerStarted) await initializeViewer();
-});
-exploreButton.addEventListener('click', () => {
-  const isExpanded = !aboutSection.classList.contains('collapsed');
-  if (isExpanded) {
-    aboutSection.classList.add('collapsed');
-    aboutSection.setAttribute('aria-hidden','true');
-    exploreButton.setAttribute('aria-expanded','false');
-    exploreButton.innerHTML = 'Explore BUOC <span aria-hidden="true">＋</span>';
-    document.getElementById('welcome').scrollIntoView({behavior:scrollBehavior(),block:'start'});
-  } else {
-    aboutSection.classList.remove('collapsed');
-    aboutSection.setAttribute('aria-hidden','false');
-    exploreButton.setAttribute('aria-expanded','true');
-    exploreButton.innerHTML = 'Hide BUOC Info <span aria-hidden="true">−</span>';
-    setTimeout(() => aboutSection.scrollIntoView({behavior:scrollBehavior(),block:'start'}), 60);
-  }
-});
-closeButton.addEventListener('click', () => {
-  reader.classList.remove('open');
-  reader.setAttribute('aria-hidden', 'true');
-  viewButton.setAttribute('aria-expanded', 'false');
-  viewButton.innerHTML = '📜 View Constitution &amp; By-Laws <span aria-hidden="true">↘</span>';
-  document.getElementById('welcome').scrollIntoView({behavior:scrollBehavior(), block:'start'});
-  viewButton.focus({preventScroll:true});
-});
+const committeeData={
+ secretariat:{name:'Secretariat Committee',mark:'文',advocacy:'Reliable records and accessible information strengthen continuity, transparency, and coordination within BUOC.',objective:'To support the organization through accurate documentation, orderly records, and timely dissemination of information.',roles:['Assist the Secretary General and Deputy Secretary General in performing their duties.','Take charge of organizational documents and records.','Help disseminate information to all members.'],head:'Secretary General',cohead:'Deputy Secretary General'},
+ finance:{name:'Finance Committee',mark:'¥',advocacy:'Responsible stewardship of organizational funds for the welfare and benefit of BUOC and its members.',objective:'To maintain responsible financial practices and help ensure that resources are collected, tracked, and used for organizational needs.',roles:['Be responsible for the organization’s finances.','Initiate fundraising projects.','Collect dues and fees from applicants and members.','Help ensure finances are used for the welfare and benefit of members and the organization.'],head:'Finance General',cohead:'Deputy Finance General'},
+ planning:{name:'Planning Committee',mark:'企',advocacy:'Thoughtful collaboration turns creative ideas into organized, meaningful BUOC activities.',objective:'To assist in formulating, supervising, and executing organizational plans, projects, events, and other endeavors.',roles:['Assist in formulating, supervising, and executing plans and projects.','Work with the Secretariat and Executive Committee to prepare the foundations for events and activities.'],head:'External Vice President',cohead:'Internal Vice President'},
+ prhr:{name:'Public Relations & Human Relations (PR-HR) Committee',mark:'和',advocacy:'A welcoming, connected community built through clear communication, fair membership processes, and camaraderie.',objective:'To support membership administration, information dissemination, member engagement, and a cooperative community.',roles:['Manage the application process and, with the Executive Committee, evaluate member status and probation cases each semester.','Screen and evaluate membership applicants with the Executive Committee.','Supervise member reaffirmation.','Initiate activities that foster camaraderie, cooperation, solidarity, and unity.','Formulate application guidelines and procedures subject to Executive Committee approval.','Help disseminate information and secure a copy of the Constitution & By-Laws.'],head:'Public Information Officer',cohead:null},
+ ways:{name:'Ways and Means Committee',mark:'商',advocacy:'Creative fundraising and careful use of entrusted funds help make BUOC programs and activities possible.',objective:'To support organizational sustainability through fundraising and the appropriate use of funds entrusted to the committee.',roles:['Handle matters associated with raising funds for the organization.','Use funds entrusted to the club for organizational purposes, consistent with the CBL.'],head:'Business Managers',cohead:null}
+};
+const modal=document.getElementById('committeeModal');
+const modalBody=document.getElementById('modalBody');
+const modalClose=document.getElementById('modalClose');
+let lastFocused=null;
+function openCommittee(key){const c=committeeData[key];if(!c)return;lastFocused=document.activeElement;
+ const roles=c.roles.map(role=>`<li>${role}</li>`).join('');
+ const leader=(title,person)=>`<div class="leader-card"><div class="leader-photo">PHOTO<br>COMING SOON</div><strong>${title}</strong><span>${person||'Not specified in the current CBL'}</span></div>`;
+ modalBody.innerHTML=`<div class="modal-hero"><div class="committee-logo" aria-hidden="true">${c.mark}</div><div><h2 id="modalTitle">${c.name}</h2><p>BUOC Standing Committee</p></div></div><section class="detail-block"><h3>Advocacy</h3><p>${c.advocacy}</p></section><section class="detail-block"><h3>Objectives</h3><p>${c.objective}</p></section><section class="detail-block"><h3>Official functions and roles</h3><ul>${roles}</ul></section><section class="detail-block"><h3>Committee leadership</h3><div class="leaders-grid">${leader('Head',c.head)}${c.cohead?leader('Co-head',c.cohead):leader('Additional leadership','No co-head specified in the current CBL')}</div><p style="font-size:.82rem;margin-top:10px;color:var(--muted)">Leadership photos are marked “Coming Soon” because photographs were not provided for this website update.</p></section>`;
+ modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';modalClose.focus();}
+function closeCommittee(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocused)lastFocused.focus();}
+document.querySelectorAll('[data-committee]').forEach(card=>card.addEventListener('click',()=>openCommittee(card.dataset.committee)));
+modalClose.addEventListener('click',closeCommittee);modal.addEventListener('click',e=>{if(e.target===modal)closeCommittee()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeCommittee()});
 
-function showFallback(message) {
-  status.textContent = message;
-  fallback.hidden = false;
-}
-
-async function initializeViewer() {
-  if (viewerStarted) return;
-  viewerStarted = true;
-  status.textContent = 'Loading the document viewer…';
-  viewButton.disabled = true;
-  try {
-    // The deferred CDN script may still be loading when the button is pressed.
-    for (let i = 0; i < 40 && !window.pdfjsLib; i++) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+// Render every PDF page into the document flow instead of relying on Safari's native iframe viewer.
+(async function renderCBL(){
+  const status=document.getElementById('pdfStatus');
+  const pages=document.getElementById('pdfPages');
+  const fallback=document.getElementById('pdfFallback');
+  if(!window.pdfjsLib){status.textContent='Inline PDF viewer could not load.';fallback.hidden=false;return;}
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  try{
+    const pdf=await pdfjsLib.getDocument({url:'assets/BUOC_CBL_Clean.pdf'}).promise;
+    status.textContent=`Loading ${pdf.numPages} pages…`;
+    for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+      const page=await pdf.getPage(pageNumber);
+      const base=page.getViewport({scale:1});
+      const availableWidth=Math.max(240,Math.min(pages.clientWidth||900,900));
+      const scale=Math.min(2,availableWidth/base.width);
+      const viewport=page.getViewport({scale});
+      const wrapper=document.createElement('div');
+      wrapper.className='pdf-page-wrap';
+      const canvas=document.createElement('canvas');
+      canvas.className='pdf-page';
+      canvas.setAttribute('role','img');
+      canvas.setAttribute('aria-label',`Page ${pageNumber} of ${pdf.numPages}`);
+      canvas.width=Math.floor(viewport.width);
+      canvas.height=Math.floor(viewport.height);
+      canvas.style.aspectRatio=`${viewport.width} / ${viewport.height}`;
+      const context=canvas.getContext('2d',{alpha:false});
+      await page.render({canvasContext:context,viewport}).promise;
+      const label=document.createElement('div');
+      label.className='pdf-page-label';label.textContent=`Page ${pageNumber} of ${pdf.numPages}`;
+      wrapper.append(canvas,label);pages.append(wrapper);
+      status.textContent=`Rendered ${pageNumber} of ${pdf.numPages} pages`;
     }
-    if (!window.pdfjsLib) throw new Error('PDF.js did not load.');
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    loadingTask = pdfjsLib.getDocument({url:'assets/BUOC_CBL_Clean.pdf'});
-    pdfDocument = await loadingTask.promise;
-    status.textContent = `Preparing ${pdfDocument.numPages} pages…`;
-    await createPagePlaceholders();
-    // Render the first page immediately so the reader feels responsive, then
-    // render nearby pages only as the visitor approaches them.
-    await renderPage(1);
-    setupPageObserver();
-    status.textContent = `${pdfDocument.numPages} pages ready. More pages render as you scroll.`;
-  } catch (error) {
-    console.error('Unable to initialize BUOC CBL reader:', error);
-    showFallback('The inline viewer could not load the document. Use the open or download links below.');
-    viewerStarted = false;
-  } finally {
-    viewButton.disabled = false;
+    status.textContent=`All ${pdf.numPages} pages loaded. Scroll down to continue reading.`;
+  }catch(error){
+    console.error('Unable to render BUOC CBL PDF:',error);
+    status.textContent='The inline viewer could not load the PDF.';
+    fallback.hidden=false;
   }
-}
-
-async function createPagePlaceholders() {
-  pagesContainer.replaceChildren();
-  pageStates.clear();
-  const firstPage = await pdfDocument.getPage(1);
-  const firstViewport = firstPage.getViewport({scale:1});
-  const ratio = `${firstViewport.width} / ${firstViewport.height}`;
-  for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'pdf-page-wrap';
-    wrapper.dataset.page = String(pageNumber);
-    const placeholder = document.createElement('div');
-    placeholder.className = 'pdf-page-placeholder';
-    placeholder.style.setProperty('--page-ratio', ratio);
-    placeholder.textContent = `Page ${pageNumber}`;
-    placeholder.setAttribute('aria-label', `Page ${pageNumber} loading area`);
-    const label = document.createElement('div');
-    label.className = 'pdf-page-label';
-    label.textContent = `Page ${pageNumber} of ${pdfDocument.numPages}`;
-    wrapper.append(placeholder, label);
-    pagesContainer.append(wrapper);
-    pageStates.set(pageNumber, {wrapper, placeholder, canvas:null, rendering:false, rendered:false, page:null, viewport:null});
-  }
-}
-
-function setupPageObserver() {
-  if (pageObserver) pageObserver.disconnect();
-  if ('IntersectionObserver' in window) {
-    pageObserver = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        const pageNumber = Number(entry.target.dataset.page);
-        if (entry.isIntersecting) renderPage(pageNumber).catch(error => {
-          console.error(`Unable to render BUOC CBL page ${pageNumber}:`, error);
-          const state = pageStates.get(pageNumber);
-          if (state) state.placeholder.textContent = `Page ${pageNumber} could not render. Scroll away and back to retry.`;
-        });
-      }
-      releaseDistantCanvases();
-    }, {root:null, rootMargin:'320px 0px', threshold:0.01});
-    pageStates.forEach(state => pageObserver.observe(state.wrapper));
-  } else {
-    // Compatibility fallback for older browsers: render pages sequentially.
-    renderAllPagesFallback();
-  }
-}
-
-async function renderAllPagesFallback() {
-  for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
-    await renderPage(pageNumber);
-  }
-}
-
-async function renderPage(pageNumber, force = false) {
-  const state = pageStates.get(pageNumber);
-  if (!state || state.rendering || (state.rendered && !force)) return;
-  state.rendering = true;
-  try {
-    if (!state.page) state.page = await pdfDocument.getPage(pageNumber);
-    const baseViewport = state.page.getViewport({scale:1});
-    const availableWidth = Math.max(1, Math.min(state.wrapper.clientWidth || pagesContainer.clientWidth || 900, 900));
-    const cssScale = availableWidth / baseViewport.width;
-    const viewport = state.page.getViewport({scale:cssScale});
-    // A 2x backing store stays crisp on most high-density mobile screens while
-    // avoiding the large memory and rasterization cost of 2.5x canvases.
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const canvas = document.createElement('canvas');
-    canvas.className = 'pdf-page';
-    canvas.setAttribute('role','img');
-    canvas.setAttribute('aria-label',`Constitution and By-Laws, page ${pageNumber} of ${pdfDocument.numPages}`);
-    canvas.style.setProperty('--page-ratio', `${viewport.width} / ${viewport.height}`);
-    canvas.style.width = `${Math.floor(viewport.width)}px`;
-    canvas.style.maxWidth = '100%';
-    canvas.style.height = 'auto';
-    canvas.width = Math.max(1, Math.floor(viewport.width * dpr));
-    canvas.height = Math.max(1, Math.floor(viewport.height * dpr));
-    const context = canvas.getContext('2d', {alpha:false});
-    if (!context) throw new Error('Canvas context unavailable.');
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    await state.page.render({canvasContext:context, viewport}).promise;
-    state.canvas = canvas;
-    state.viewport = viewport;
-    state.placeholder.replaceWith(canvas);
-    state.rendered = true;
-    status.textContent = `Document loaded · page ${pageNumber} of ${pdfDocument.numPages} rendered`;
-  } finally {
-    state.rendering = false;
-  }
-}
-
-function releaseDistantCanvases() {
-  const rendered = [...pageStates.entries()].filter(([,state]) => state.rendered && state.canvas);
-  if (rendered.length <= MAX_RENDERED_CANVASES) return;
-  const viewportTop = window.scrollY;
-  const viewportBottom = viewportTop + window.innerHeight;
-  const ranked = rendered.map(([pageNumber,state]) => {
-    const rect = state.wrapper.getBoundingClientRect();
-    const top = rect.top + window.scrollY;
-    const bottom = top + rect.height;
-    const distance = bottom < viewportTop ? viewportTop-bottom : top > viewportBottom ? top-viewportBottom : 0;
-    return {pageNumber,state,distance};
-  }).sort((a,b) => b.distance-a.distance);
-  let remaining = rendered.length;
-  for (const item of ranked) {
-    if (remaining <= MAX_RENDERED_CANVASES) break;
-    if (item.distance === 0) continue;
-    const replacement = document.createElement('div');
-    replacement.className = 'pdf-page-placeholder';
-    replacement.style.setProperty('--page-ratio', `${item.state.viewport.width} / ${item.state.viewport.height}`);
-    replacement.textContent = `Page ${item.pageNumber} · scroll back to reload`;
-    replacement.setAttribute('aria-label', `Page ${item.pageNumber} can be reloaded by scrolling back to it`);
-    item.state.canvas.width = 0;
-    item.state.canvas.height = 0;
-    item.state.canvas.replaceWith(replacement);
-    item.state.canvas = null;
-    item.state.placeholder = replacement;
-    item.state.rendered = false;
-    remaining--;
-  }
-}
-
-window.addEventListener('resize', () => {
-  if (!pdfDocument) return;
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(async () => {
-    const visibleStates = [...pageStates.entries()].filter(([,state]) => {
-      const rect = state.wrapper.getBoundingClientRect();
-      return rect.bottom >= -window.innerHeight && rect.top <= window.innerHeight * 2;
-    });
-    for (const [pageNumber,state] of visibleStates) {
-      if (state.rendered && state.canvas) {
-        const oldCanvas = state.canvas;
-        const placeholder = document.createElement('div');
-        placeholder.className = 'pdf-page-placeholder';
-        placeholder.style.setProperty('--page-ratio', `${state.viewport.width} / ${state.viewport.height}`);
-        placeholder.textContent = `Page ${pageNumber} updating…`;
-        oldCanvas.replaceWith(placeholder);
-        oldCanvas.width = 0; oldCanvas.height = 0;
-        state.canvas = null; state.placeholder = placeholder; state.rendered = false;
-      }
-      await renderPage(pageNumber, true).catch(error => console.error('PDF resize render failed:', error));
-    }
-  }, 180);
-});
-
-// Ensure the hidden reader is excluded from accessibility navigation until opened.
-reader.setAttribute('aria-hidden','true');
+})();
 </script>
 </body>
 </html>
