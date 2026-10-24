@@ -139,7 +139,7 @@ let viewerStarted = false;
 let pageObserver = null;
 let resizeTimer = null;
 const pageStates = new Map();
-const MAX_RENDERED_CANVASES = 4;
+const MAX_RENDERED_CANVASES = 3;
 
 viewButton.addEventListener('click', async () => {
   const isOpen = reader.classList.contains('open');
@@ -207,8 +207,11 @@ async function initializeViewer() {
     pdfDocument = await loadingTask.promise;
     status.textContent = `Preparing ${pdfDocument.numPages} pages…`;
     await createPagePlaceholders();
+    // Render the first page immediately so the reader feels responsive, then
+    // render nearby pages only as the visitor approaches them.
+    await renderPage(1);
     setupPageObserver();
-    status.textContent = `${pdfDocument.numPages} pages ready. Pages render as you scroll.`;
+    status.textContent = `${pdfDocument.numPages} pages ready. More pages render as you scroll.`;
   } catch (error) {
     console.error('Unable to initialize BUOC CBL reader:', error);
     showFallback('The inline viewer could not load the document. Use the open or download links below.');
@@ -255,7 +258,7 @@ function setupPageObserver() {
         });
       }
       releaseDistantCanvases();
-    }, {root:null, rootMargin:'900px 0px', threshold:0.01});
+    }, {root:null, rootMargin:'320px 0px', threshold:0.01});
     pageStates.forEach(state => pageObserver.observe(state.wrapper));
   } else {
     // Compatibility fallback for older browsers: render pages sequentially.
@@ -279,7 +282,9 @@ async function renderPage(pageNumber, force = false) {
     const availableWidth = Math.max(1, Math.min(state.wrapper.clientWidth || pagesContainer.clientWidth || 900, 900));
     const cssScale = availableWidth / baseViewport.width;
     const viewport = state.page.getViewport({scale:cssScale});
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    // A 2x backing store stays crisp on most high-density mobile screens while
+    // avoiding the large memory and rasterization cost of 2.5x canvases.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const canvas = document.createElement('canvas');
     canvas.className = 'pdf-page';
     canvas.setAttribute('role','img');
