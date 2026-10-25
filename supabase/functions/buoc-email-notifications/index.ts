@@ -39,22 +39,19 @@ async function sendOfficerEmails(subject: string, html: string) {
   const users = (userPayload.users ?? []) as Array<{id:string;email?:string}>;
   const emails = [...new Set(officers.map((o) => users.find((u) => u.id === o.user_id)?.email?.trim().toLowerCase() ?? "").filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))];
   if (!emails.length) throw new Error("No active officers have valid email addresses");
-  const results = await Promise.allSettled(emails.map(async (email) => {
+  const failures: string[] = [];
+  // Send sequentially to avoid bursting past Resend's 10-requests-per-second limit.
+  for (const email of emails) {
     try {
       await sendEmail(email, subject, html);
       console.log("BUOC officer email accepted by Resend", { recipient: email });
-      return { recipient: email, ok: true as const };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       console.error("BUOC officer email failed", { recipient: email, error: message });
-      throw new Error(`${email}: ${message}`);
+      failures.push(`${email}: ${message}`);
     }
-  }));
-  const failures = results.flatMap((result) =>
-    result.status === "rejected"
-      ? [result.reason instanceof Error ? result.reason.message : String(result.reason)]
-      : []
-  );
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
   if (failures.length) {
     console.error("BUOC officer email failure summary", { failedCount: failures.length, failures });
     throw new Error(`Officer notification delivery failed for ${failures.length} recipient(s)`);
