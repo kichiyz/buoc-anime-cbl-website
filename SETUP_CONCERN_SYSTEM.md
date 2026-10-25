@@ -1,54 +1,71 @@
-# BUOC Concern & Inquiry Desk — setup guide
+# BUOC Concern & Inquiry Desk — setup and maintenance guide
 
-This adds a concern submission form, private report lookup, an authenticated officer dashboard, status updates, replies, and a private attachment bucket to the existing BUOC GitHub Pages site. It does not replace the existing directory, committee profiles, or CBL viewer.
+This guide documents the Concern & Inquiry Desk integrated into the BUOC GitHub Pages website. It supplements, rather than replaces, the existing officers directory, committee profiles, anime-inspired design, and CBL reader.
 
 ## Architecture
 
-- Frontend: GitHub Pages (`index.html`) with the existing anime-inspired navy/gold theme.
-- Backend/database/authentication/storage: Supabase.
-- Email notifications: Supabase Edge Function plus an email provider such as Resend. Never put the email-provider API key or Supabase `service_role` key in browser code or GitHub Pages.
-- Public visitors can submit reports and check status using the report reference + submitting email. Only accounts explicitly added to `buoc_officers` can view all reports and reply.
+- **Frontend:** GitHub Pages, primarily `index.html` and `officer.html`.
+- **Public browser configuration:** `assets/concern-config.js`, loaded by the public site and officer portal.
+- **Backend:** Supabase database, authentication, row-level security, and private attachment storage.
+- **Email:** the `buoc-email-notifications` Supabase Edge Function, a durable email queue, database webhooks, and Resend.
+- **Public site:** https://kichiyz.github.io/buoc-anime-cbl-website/
 
-## 1. Create Supabase project and configure the frontend
+## Current project configuration
 
-1. Create a Supabase project and open **SQL Editor**.
-2. Run the entire `supabase/schema.sql` file.
-3. In Supabase Project Settings → API, copy the **Project URL** and **anon/publishable key**.
-4. Edit `assets/concern-config.js` and replace `YOUR_PROJECT_ID` and `YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY`. These are public browser values; do not use a `service_role` or secret key.
-5. Commit and push the site to GitHub Pages. The Concern Desk will remain disabled until the config has real values.
+The repository's `assets/concern-config.js` is already the live client configuration file. Do not follow older instructions to replace its valid values with placeholders. It may contain only the Supabase project URL and the public anon/publishable key. These are browser-visible values; never place a service-role key, Resend API key, webhook secret, password, or other private credential in this file.
 
-## 2. Create officer accounts and authorize them
+For a new environment, obtain the project URL and public anon/publishable key from Supabase Project Settings → API, then update this file. Do not create a second competing configuration file unless the application is deliberately changed to load it.
 
-1. In Supabase Authentication, create an account for each current authorized BUOC officer. Use individual accounts; never share passwords.
-2. Confirm the identity of each officer before authorizing the account.
-3. In SQL Editor, run the following once per officer, replacing the email and name. The user must already exist in `auth.users`:
+## Database and access control
+
+- The base schema is maintained in `supabase/schema.sql`.
+- Versioned database changes belong in `supabase/migrations/`. Apply each required migration in Supabase SQL Editor or through the approved Supabase CLI workflow before deploying code that depends on it.
+- Keep row-level security enabled. Do not add public read access to concerns or replies.
+- Create individual Supabase Auth accounts for officers and add only verified, currently authorized officers to `public.buoc_officers`. Revoke access when an officer is no longer authorized.
+- Keep the attachment bucket private and use expiring signed links. File MIME types can be spoofed; validate files server-side if the system is used for sensitive cases.
+
+The officer allowlist SQL pattern is:
 
 ```sql
 insert into public.buoc_officers(user_id, officer_name, officer_role, active)
 select id, 'Officer Full Name', 'officer', true
-from auth.users where lower(email)=lower('officer@example.com')
+from auth.users
+where lower(email) = lower('officer@example.com')
 on conflict (user_id) do update
-set officer_name=excluded.officer_name, officer_role=excluded.officer_role, active=true;
+set officer_name = excluded.officer_name,
+    officer_role = excluded.officer_role,
+    active = true;
 ```
 
-To revoke access, set `active=false` or delete that officer row. Keep the officer allowlist limited to currently authorized officers. All active officers can read and reply to all reports, as requested.
+Replace the sample name and email with verified details. The Auth user must already exist. Never share accounts or passwords.
 
-## 3. Email notifications
+## Email notification maintenance
 
-Follow the maintained, complete deployment and recovery guide in [supabase/EMAIL_NOTIFICATIONS.md](supabase/EMAIL_NOTIFICATIONS.md). It documents the durable queue migration, the Edge Function deployment, all three database webhooks, secrets, automatic queue-drain scheduling, retries, dead-letter inspection, and controlled testing.
+Use [`supabase/EMAIL_NOTIFICATIONS.md`](supabase/EMAIL_NOTIFICATIONS.md) as the maintained source of truth for the notification queue, Edge Function deployment, database webhooks, Vault secrets, scheduled queue drain, retry/backoff behavior, quota handling, and diagnostics.
 
-Important: the notification queue migration must be applied in Supabase SQL Editor before deploying the queue-enabled function. Set up the scheduled drain (Supabase pg_cron + pg_net + Vault, or a trusted external scheduler) so pending messages are retried even when no new concern/reply/status webhook arrives. Never put the Resend API key, service-role key, or webhook secret in browser code or GitHub.
+Important operating rules:
 
-## 4. Security checklist before launch
+- Keep `BUOC_EMAIL_WEBHOOK_SECRET`, `RESEND_API_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in Supabase secrets/Vault only, not in the website or repository.
+- Ensure the three expected webhook events are configured: concern INSERT, concern UPDATE, and reply INSERT.
+- The scheduled queue drain is necessary to retry pending jobs when no new webhook event occurs.
+- Resend quota exhaustion pauses pending messages until the retry time. Confirm quota status and provider logs before sending repeated test concerns.
+- A queue status of `sent` means the provider accepted the request; confirm delivery/bounce events when inbox delivery matters.
 
-- **CAPTCHA and rate limiting:** The included RPC limits three submissions per email per 10 minutes, but email-only throttling can be bypassed. Before public launch, route submissions through an Edge Function with Cloudflare Turnstile (or equivalent) verification and IP-based rate limiting. Do not trust a CAPTCHA token unless it is verified server-side.
-- **Attachment controls:** The private bucket caps uploads at 5 MB and limits MIME types. MIME types can be spoofed; consider malware scanning and verify file signatures in a server-side upload function before relying on attachments for sensitive cases.
-- **Access control:** Keep RLS enabled. Never add public `SELECT` access to the concerns or replies tables, and never expose service-role credentials in HTML, JavaScript, repository files, or GitHub Actions logs.
-- **Email privacy:** Use BCC or individual messages; do not disclose submitters to other reporters. Avoid placing sensitive complaint details in email subject lines.
-- **Data minimization:** Publish a short privacy notice and retention period, restrict access to verified officers, and remove old reports/attachments according to BUOC policy and applicable privacy requirements.
-- **Operational handling:** Define who monitors new reports, expected response time, escalation for sensitive complaints, and how officer access is removed when their term ends. Test a full concern lifecycle on mobile and desktop before launch.
-- **Test cases:** Test anonymous submission, malformed input, attachment too large/wrong type, unknown report reference, mismatched email, unauthorized officer login, reply, status change, and mobile Safari/Chrome.
+## Security and launch checklist
 
-## Current implementation notes
+- Test with non-sensitive test data before inviting public submissions.
+- Verify rate limiting and add server-side CAPTCHA verification and IP-based abuse controls before broad public launch if these are not already deployed. Do not trust an unverified CAPTCHA token.
+- Check upload size and file type server-side; consider malware scanning for user-supplied files.
+- Never expose concern records, submitter details, private attachments, API secrets, or service-role credentials publicly.
+- Publish a short privacy notice, define access and escalation responsibilities, and establish a retention/deletion policy.
+- Test anonymous submission, report lookup using both reference and submitter email, officer authorization, replies, status changes, invalid references, upload rejection, and mobile Safari/Chrome.
 
-The frontend includes submission and tracking UI, Supabase authentication, officer dashboard, report status changes, reply creation, and private signed attachment links. `schema.sql` defines the database and access policies. The Resend notification function is deployed separately and configured through Supabase secrets and database webhooks. A CAPTCHA-verified, IP-rate-limited public submission endpoint is not documented as deployed here; email-only throttling may be bypassed. Before broad public launch, consider server-side CAPTCHA verification and IP-based rate limiting, and test all workflows with non-sensitive test reports.
+## Deployment workflow
+
+For frontend changes, review the diff, preserve existing asset paths and functionality, then commit and push to the `main` branch used by GitHub Pages. Test the live site on desktop and mobile after publishing.
+
+For backend changes, use the Supabase CLI linked to the intended project, apply migrations in order, deploy the affected Edge Function, and manage secrets through Supabase's secure secret-management tools. Do not assume a GitHub Pages commit deploys database or Edge Function changes.
+
+## Operational SQL files
+
+SQL files in `supabase/` can change production data or permissions. Treat them as maintained operational scripts—not disposable scratch files. Read and validate each script, verify its target, and confirm backups/retention requirements before running destructive operations.
