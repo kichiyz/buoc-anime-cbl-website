@@ -35,7 +35,7 @@ To revoke access, set `active=false` or delete that officer row. Keep the office
 
 ## 3. Email notifications
 
-The browser calls the Edge Function named `buoc-concern-notify` after an officer reply or status change. For actual email delivery, deploy an Edge Function that:
+The deployed `buoc-email-notifications` Edge Function sends Resend notifications from three Supabase Database Webhooks: concern INSERT, concern UPDATE (status changes only), and officer reply INSERT. The function checks a private `x-webhook-secret` header and reads its API key and sender from Edge Function secrets. Do not call it directly from browser code.
 
 - verifies the caller's Supabase JWT and `buoc_is_officer()` authorization;
 - accepts only `event_type` of `reply` or `status` and a valid concern ID;
@@ -53,9 +53,9 @@ Set the function secrets in Supabase, not in this repository. Add an INSERT data
 - **Access control:** Keep RLS enabled. Never add public `SELECT` access to the concerns or replies tables, and never expose service-role credentials in HTML, JavaScript, repository files, or GitHub Actions logs.
 - **Email privacy:** Use BCC or individual messages; do not disclose submitters to other reporters. Avoid placing sensitive complaint details in email subject lines.
 - **Data minimization:** Publish a short privacy notice and retention period, restrict access to verified officers, and remove old reports/attachments according to BUOC policy and applicable privacy requirements.
-- **Operational handling:** Define who monitors new reports, expected response time, escalation for sensitive complaints, and how officer access is removed when their term ends.
+- **Operational handling:** Define who monitors new reports, expected response time, escalation for sensitive complaints, and how officer access is removed when their term ends. Test a full concern lifecycle on mobile and desktop before launch.
 - **Test cases:** Test anonymous submission, malformed input, attachment too large/wrong type, unknown report reference, mismatched email, unauthorized officer login, reply, status change, and mobile Safari/Chrome.
 
 ## Current implementation notes
 
-The supplied frontend includes submission and tracking UI, Supabase authentication, officer dashboard, report status changes, reply creation, and private signed attachment links. `schema.sql` implements the database and access policies. The email Edge Function and CAPTCHA-protected public submission endpoint are intentionally not included as a deployed service because they require project-specific secrets and deployment. Do not announce this as fully operational until those services are configured and tested.
+The frontend includes submission and tracking UI, Supabase authentication, officer dashboard, report status changes, reply creation, and private signed attachment links. `schema.sql` defines the database and access policies. The Resend notification function is deployed separately and configured through Supabase secrets and database webhooks. A CAPTCHA-verified, IP-rate-limited public submission endpoint is not documented as deployed here; email-only throttling may be bypassed. Before broad public launch, consider server-side CAPTCHA verification and IP-based rate limiting, and test all workflows with non-sensitive test reports.
