@@ -65,8 +65,8 @@ Run the Vault secret creation only once. If a secret name already exists, update
 - Duplicate webhook deliveries are safe: queue rows have stable unique idempotency keys.
 - The function sends sequentially with spacing, and includes a stable Resend idempotency key for each queued job.
 - Network failures, 429 rate limits, and 5xx errors are scheduled with backoff. Resend's Retry-After is respected when provided.
-- A daily_quota_exceeded error pauses the affected queue work for 12 hours; the scheduler will retry after that time. If the Resend quota does not reset/increase, the job will be deferred again rather than hammered.
-- Permanent 4xx errors (except 429) and jobs that reach 12 attempts move to dead; they are retained for inspection and are not silently discarded.
+- A daily_quota_exceeded error activates a global circuit breaker for 12 hours, pauses all pending queue jobs, and stops further provider calls from every webhook/cron invocation during that window. If the Resend quota does not reset/increase, the queue will be deferred again rather than hammered.
+- Invalid recipient/content 4xx errors (except 429) and jobs that reach 12 attempts move to dead; they are retained for inspection and are not silently discarded. Resend 401/403 configuration/authentication failures activate a six-hour circuit breaker so the administrator can fix the key/sender without losing queued jobs.
 - Jobs stuck in processing for more than 10 minutes can be reclaimed.
 - Queue payloads contain email body content and addresses. The table has RLS enabled and no access for anon or authenticated; do not grant public access.
 
