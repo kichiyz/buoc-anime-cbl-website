@@ -18,13 +18,51 @@ function esc(value: unknown): string {
   }[c] as string));
 }
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function sendEmail(to: string, subject: string, html: string) {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: RESEND_FROM, to: [to], subject, html }),
-  });
-  if (!response.ok) throw new Error(`Resend error ${response.status}: ${(await response.text()).slice(0, 300)}`);
+  const maxAttempts = 4;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let response: Response;
+    try {
+      response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: RESEND_FROM, to: [to], subject, html }),
+      });
+    } catch (error) {
+      if (attempt === maxAttempts) throw error;
+      const waitMs = Math.min(1000 * 2 ** (attempt - 1), 8000);
+      console.warn("BUOC email request network error; retrying", { attempt, nextAttempt: attempt + 1, waitMs });
+      await delay(waitMs);
+      continue;
+    }
+
+    if (response.ok) {
+      const result = await response.json().catch(() => ({}));
+      console.log("BUOC email accepted by Resend", { recipient: to, subject, attempt, messageId: result.id ?? null });
+      return;
+    }
+
+    const status = response.status;
+    const body = (await response.text()).slice(0, 300);
+    const retryable = status === 429 || status >= 500;
+    if (!retryable || attempt === maxAttempts) {
+      throw new Error(`Resend error ${status} after ${attempt} attempt(s): ${body}`);
+    }
+
+    const retryAfterHeader = response.headers.get("retry-after");
+    const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : NaN;
+    const waitMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+      ? Math.min(retryAfterSeconds * 1000, 30000)
+      : Math.min(1000 * 2 ** (attempt - 1), 8000);
+    console.warn("BUOC email request rate-limited or temporarily unavailable; retrying", {
+      recipient: to, status, attempt, nextAttempt: attempt + 1, waitMs,
+    });
+    await delay(waitMs);
+  }
+  throw new Error("Resend email attempts exhausted");
 }
 
 async function sendOfficerEmails(subject: string, html: string) {
@@ -87,14 +125,18 @@ serve(async (req) => {
       submitterName = record.submitter_name ?? "there";
       subject = `BUOC received your concern — ${reference}`;
       detail = `<p>Hello ${esc(submitterName)},</p><p>We have received your message titled <strong>${esc(record.subject)}</strong>.</p><p>Your reference number is <strong>${esc(reference)}</strong>. Keep it for follow-up.</p><p>The BUOC officers have also been notified. Please do not reply to this automated email.</p>`;
+      console.log("BUOC notification workflow started", { workflow: "concern_insert", reference });
       await sendEmail(submitterEmail, subject, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746">${detail}</div>`);
+      console.log("BUOC submitter confirmation accepted by Resend", { reference });
       await sendOfficerEmails(`New BUOC concern: ${reference}`, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746"><h2>New concern submitted</h2><p><b>Reference:</b> ${esc(reference)}</p><p><b>From:</b> ${esc(submitterName)} (${esc(submitterEmail)})</p><p><b>Campus:</b> ${esc(record.campus)}</p><p><b>Category:</b> ${esc(record.category)}</p><p><b>Subject:</b> ${esc(record.subject)}</p><p><b>Message:</b></p><p>${esc(record.message).replace(/\n/g, "<br>")}</p><p>Open the <a href="https://kichiyz.github.io/buoc-anime-cbl-website/officer.html">BUOC Officer Desk</a> to review it.</p></div>`);
     } else if (table === "buoc_concerns" && type === "UPDATE" && record.status !== oldRecord.status) {
       reference = record.reference_code ?? "";
       submitterEmail = record.submitter_email ?? "";
       submitterName = record.submitter_name ?? "there";
       const status = String(record.status ?? "").replace(/_/g, " ");
+      console.log("BUOC notification workflow started", { workflow: "concern_status_update", reference, status });
       await sendEmail(submitterEmail, `BUOC concern status updated — ${reference}`, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746"><p>Hello ${esc(submitterName)},</p><p>The status of your concern <strong>${esc(reference)}</strong> (${esc(record.subject)}) has changed to <strong>${esc(status)}</strong>.</p><p>You can check its progress using the reference number and email address you submitted.</p><p>This is an automated message; please do not reply.</p></div>`);
+      console.log("BUOC submitter status notification accepted by Resend", { reference });
       await sendOfficerEmails(`BUOC concern status changed: ${reference}`, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746"><p><strong>${esc(reference)}</strong> — ${esc(record.subject)}</p><p>Status changed from ${esc(oldRecord.status)} to <strong>${esc(status)}</strong>.</p><p>Updated by an authorized dashboard action.</p></div>`);
     } else if (table === "buoc_concern_replies" && type === "INSERT" && record.author_role === "officer") {
       // Retrieve report metadata using the service-role key, which stays in Edge Function secrets only.
@@ -115,9 +157,10 @@ serve(async (req) => {
       return new Response(JSON.stringify({ ignored: true, table, type }), { headers: { ...cors, "Content-Type": "application/json" } });
     }
 
+    console.log("BUOC notification workflow completed", { table, type, reference: reference || null });
     return new Response(JSON.stringify({ ok: true }), { headers: { ...cors, "Content-Type": "application/json" } });
   } catch (error) {
-    console.error("BUOC notification failure", error);
+    console.error("BUOC notification workflow failed", error);
     return new Response("Notification delivery failed", { status: 500, headers: cors });
   }
 });
