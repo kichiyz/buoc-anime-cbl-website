@@ -14,7 +14,7 @@ create table if not exists public.buoc_login_audit (
   user_id uuid references auth.users(id) on delete set null,
   officer_name text not null,
   officer_role text not null,
-  event_type text not null check (event_type in ('login_success','duplicate_session_denied','session_released')),
+  event_type text not null check (event_type in ('login_success','duplicate_session_denied')),
   occurred_at timestamptz not null default now(),
   user_agent text
 );
@@ -111,12 +111,7 @@ begin
   if auth.uid() is null then return false; end if;
   select * into v_officer from public.buoc_officers where user_id=auth.uid() and active=true limit 1;
   delete from public.buoc_officer_sessions where user_id=auth.uid() and session_key=p_session_key;
-  if found and v_officer.user_id is not null then
-    insert into public.buoc_login_audit(user_id,officer_name,officer_role,event_type)
-    values(auth.uid(),v_officer.officer_name,v_officer.officer_role,'session_released');
-    return true;
-  end if;
-  return false;
+  return found;
 end;
 $$;
 
