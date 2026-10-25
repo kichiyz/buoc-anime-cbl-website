@@ -1,6 +1,6 @@
 # BUOC Concern Desk email notifications
 
-This adds a server-side Supabase Edge Function for Resend. It does not modify the existing dashboard or database schema. Notifications are sent for:
+This documents the deployed server-side Supabase Edge Function `buoc-email-notifications` for Resend. It does not modify the dashboard or database schema. Database webhooks trigger notifications for:
 - new concerns: submitter acknowledgement + officer inbox alert;
 - status changes: submitter update + officer inbox alert;
 - officer replies: submitter reply alert + officer inbox alert.
@@ -38,7 +38,11 @@ Add header:
 
 If the UI allows selecting columns for UPDATE, leave it to send the full old and new records. The function ignores updates where status did not change. For INSERT webhooks, send the full record.
 
-## 4. Test safely
+## 4. Current deployment and safe testing
+
+The project has the `buoc-email-notifications` function deployed with JWT verification disabled and its own `x-webhook-secret` validation. The three database webhooks are configured for concern INSERT, concern UPDATE, and reply INSERT. The verified sending domain is `buoc-otaku-circle.isroot.in`; the configured sender is `BUOC Concern Desk <notifications@buoc-otaku-circle.isroot.in>`. Keep all secrets only in Supabase and never copy them into this file or public code.
+
+
 1. Submit a test concern using an inbox you control. Confirm the submitter acknowledgement and officer alert arrive.
 2. Change that test concern's status from the dashboard. Confirm both status notifications arrive.
 3. Post a test officer reply. Confirm both reply notifications arrive.
@@ -46,7 +50,7 @@ If the UI allows selecting columns for UPDATE, leave it to send the full old and
 5. Test with a non-sensitive report before enabling for real users.
 
 ## Notes
-- Email delivery is asynchronous and depends on Resend sender verification, account limits, and correct secrets.
+- Email delivery is asynchronous and depends on DNS/domain verification, Resend account limits, correct secrets, and the receiving provider. The domain is configured for sending; MX receiving is not required for outbound notifications.
 - The function never sends attachments or signed attachment links by email.
 - This function sends notification emails only; replies are still posted through the existing dashboard / concern lookup workflow.
 - Do not put API keys, service-role keys, or the webhook secret in GitHub Pages files, SQL committed to the repository, or public issue comments.
