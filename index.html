@@ -291,6 +291,15 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
  #officerDirectory .org-node.president{width:100%;max-width:220px}
  #officerDirectory .org-branch .org-tier{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Ambient motion layer: quiet indigo wave lines and drifting sakura, kept behind content. */
+body{position:relative;isolation:isolate;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:-18% -12%;z-index:-1;pointer-events:none;opacity:.34;background:repeating-radial-gradient(ellipse at 50% 110%,transparent 0 34px,#83baff18 35px 36px,transparent 37px 58px);transform:translate3d(0,0,0);animation:buocWaveDrift 24s ease-in-out infinite alternate}
+body:after{content:"✿     ✧       ❀          ✿      ❀        ✧";position:fixed;inset:0;z-index:-1;pointer-events:none;white-space:pre-wrap;overflow:hidden;color:#ffc9dd;font-size:clamp(18px,2vw,30px);line-height:7.5;letter-spacing:clamp(10px,4vw,54px);opacity:.14;text-shadow:0 0 16px #ffb9d033;animation:buocSakuraFloat 32s linear infinite}
+.hero,.content,.wrap>nav,footer{position:relative}
+@keyframes buocWaveDrift{from{background-position:0 0;transform:translate3d(-1%,0,0) rotate(-1deg)}to{background-position:70px 40px;transform:translate3d(1%,1%,0) rotate(1deg)}}
+@keyframes buocSakuraFloat{0%{transform:translate3d(0,-2%,0)}50%{transform:translate3d(-1%,2%,0)}100%{transform:translate3d(1%,-2%,0)}}
+@media(prefers-reduced-motion:reduce){body:before,body:after{animation:none!important}}
 </style>
 </head>
 <body>
