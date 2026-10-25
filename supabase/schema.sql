@@ -184,3 +184,15 @@ $$;
 revoke all on function public.buoc_email_queue_stats() from public, anon, authenticated;
 grant execute on function public.buoc_email_queue_stats() to service_role;
 comment on table public.buoc_email_jobs is 'Private durable notification outbox. Access only through the service role and buoc-email-notifications Edge Function.';
+
+-- Global circuit breaker for provider quota/credential outages.
+create table if not exists public.buoc_email_queue_control (
+  id boolean primary key default true check (id = true),
+  pause_until timestamptz,
+  pause_reason text,
+  updated_at timestamptz not null default now()
+);
+insert into public.buoc_email_queue_control(id) values (true) on conflict (id) do nothing;
+alter table public.buoc_email_queue_control enable row level security;
+revoke all on public.buoc_email_queue_control from anon, authenticated;
+grant select, insert, update on public.buoc_email_queue_control to service_role;
