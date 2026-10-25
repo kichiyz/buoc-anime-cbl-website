@@ -64,7 +64,7 @@ button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
 @supports not (height:100dvh){.modal-backdrop{height:100%;}.committee-modal{max-height:calc(100vh - 32px);}}
 .modal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:22px 22px 0}.modal-close{background:#ffffff12;color:var(--ink);border:1px solid #ffffff25;padding:9px 12px;border-radius:10px}
 .modal-body{padding:18px 22px 26px}.modal-hero{display:flex;align-items:center;gap:16px;margin-bottom:20px}.modal-hero .committee-logo{width:clamp(88px,12vw,112px);height:clamp(88px,12vw,112px);flex:0 0 auto}.modal-hero h2{margin:0 0 5px;font-size:clamp(1.4rem,4vw,2rem)}.modal-hero p{margin:0;color:var(--muted);line-height:1.55}
-.detail-block{border-top:1px solid #ffffff1c;padding:17px 0}.detail-block h3{color:var(--gold);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 9px}.detail-block p,.detail-block li{color:#d5d9e8;line-height:1.7}.detail-block p{margin:0}.detail-block ul{margin:0;padding-left:20px}.leaders-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}.leader-card{border:1px solid #ffffff1c;border-radius:14px;padding:14px;background:#ffffff06}.leader-photo{width:100%;aspect-ratio:1/1;border-radius:10px;display:grid;place-items:center;background:#fff;border:1px dashed #ffffff35;color:var(--gold);font-weight:800;font-size:.82rem;text-align:center;padding:10px;margin-bottom:10px}.leader-photo img{width:100%;height:100%;object-fit:contain;object-position:center;position:absolute;inset:0;border-radius:10px;background:#fff}.leader-photo{position:relative;overflow:hidden}.leader-photo .photo-placeholder{position:relative;z-index:1;text-align:center;line-height:1.5}.leader-card{text-align:center;min-width:0}.leader-card strong{display:block;font-family:Georgia,"Palatino Linotype",serif;font-size:1.04rem;line-height:1.4;letter-spacing:.015em;color:#fff;margin:8px 0 5px;overflow-wrap:anywhere}.leader-card .leader-role{display:block;font-size:.88rem;color:var(--gold);font-weight:800;line-height:1.45}.leader-card .leader-level{display:inline-block;margin-top:8px;padding:4px 9px;border:1px solid #e8c77755;border-radius:999px;color:#e8c777;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800}.leader-card span{font-size:.85rem;color:var(--muted)}
+.detail-block{border-top:1px solid #ffffff1c;padding:17px 0}.detail-block h3{color:var(--gold);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 9px}.detail-block p,.detail-block li{color:#d5d9e8;line-height:1.7}.detail-block p{margin:0}.detail-block ul{margin:0;padding-left:20px}.leaders-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}.leader-card{border:1px solid #ffffff1c;border-radius:14px;padding:14px;background:#ffffff06}.leader-photo{width:100%;aspect-ratio:1/1;border-radius:10px;display:grid;place-items:center;background:#fff;border:1px dashed #ffffff35;color:var(--gold);font-weight:800;font-size:.82rem;text-align:center;padding:10px;margin-bottom:10px}.leader-photo img{width:100%;height:100%;object-fit:contain;object-position:center;position:absolute;inset:0;border-radius:10px;background:#fff}.leader-photo{position:relative;overflow:hidden;width:min(100%,190px);aspect-ratio:1/1;margin:0 auto 10px;flex:0 0 auto}.leader-photo img{object-fit:contain;object-position:center;background:#fff}.leader-photo .photo-placeholder{position:relative;z-index:1;text-align:center;line-height:1.5}.leader-card{text-align:center;min-width:0}.leader-card strong{display:block;font-family:Georgia,"Palatino Linotype",serif;font-size:1.04rem;line-height:1.4;letter-spacing:.015em;color:#fff;margin:8px 0 5px;overflow-wrap:anywhere}.leader-card .leader-role{display:block;font-size:.88rem;color:var(--gold);font-weight:800;line-height:1.45}.leader-card .leader-level{display:inline-block;margin-top:8px;padding:4px 9px;border:1px solid #e8c77755;border-radius:999px;color:#e8c777;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800}.leader-card span{font-size:.85rem;color:var(--muted)}
 @media(prefers-reduced-motion:reduce){.explore-panel.open,.committee-modal,.modal-backdrop{animation:none!important}.committee-modal{opacity:1!important;transform:none!important}.modal-backdrop.open{opacity:1!important}.committee-card{transition:none}}
 .info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 0 58px}
 .info article{background:#ffffff08;border:1px solid #ffffff18;border-radius:16px;padding:20px}
@@ -91,7 +91,7 @@ button:focus-visible,.button:focus-visible,a:focus-visible{outline:3px solid var
 @media(max-width:760px){.pdf-shell{padding:8px;border-radius:12px}.pdf-page-wrap{width:100%;}.pdf-toolbar{align-items:stretch}.pdf-toolbar .button,.pdf-toolbar button{flex:1}.pdf-status{width:100%}}
 footer{border-top:1px solid #ffffff20;padding:24px 0 32px;color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer span:last-child{color:var(--gold)}
-@media(max-width:760px){.committee-card{padding:18px 14px}.committee-logo{width:96px;height:96px;padding:5px;background:transparent}.committee-logo img{object-position:center 40%;transform:translateY(-5px)}.modal-hero .committee-logo{width:88px;height:88px}.leaders-grid{grid-template-columns:minmax(0,1fr)}.modal-top{padding:17px 17px 0}.modal-body{padding:16px 17px 22px}.modal-hero{align-items:flex-start}.explore-actions>*{width:100%}.hero{grid-template-columns:minmax(0,1fr);padding:36px 0 30px;gap:22px}.hero>div{min-width:0}.art{min-height:230px;width:100%;max-width:100%;grid-row:1;isolation:isolate}.sun{width:120px;height:120px;top:22px}.gate{transform:scale(.72);transform-origin:top center;margin-top:78px}.stamp{right:12px;bottom:12px;font-size:.65rem}.s1{top:20px;left:18px}.s2{top:56px;right:18px}.s3{bottom:44px;left:20px}.s4{bottom:22px;right:72px}.info{grid-template-columns:minmax(0,1fr);padding-bottom:40px}.pill{display:none}nav{padding:17px 0}.actions>*{max-width:100%;text-align:center}.actions button{line-height:1.35;white-space:normal}.lead{overflow-wrap:anywhere}}
+@media(max-width:760px){.committee-card{padding:18px 14px}.committee-logo{width:96px;height:96px;padding:5px;background:transparent}.committee-logo img{object-position:center 40%;transform:translateY(-5px)}.modal-hero .committee-logo{width:88px;height:88px}.leaders-grid{grid-template-columns:minmax(0,1fr)}.leader-photo{width:min(100%,180px);max-width:180px}.modal-top{padding:17px 17px 0}.modal-body{padding:16px 17px 22px}.modal-hero{align-items:flex-start}.explore-actions>*{width:100%}.hero{grid-template-columns:minmax(0,1fr);padding:36px 0 30px;gap:22px}.hero>div{min-width:0}.art{min-height:230px;width:100%;max-width:100%;grid-row:1;isolation:isolate}.sun{width:120px;height:120px;top:22px}.gate{transform:scale(.72);transform-origin:top center;margin-top:78px}.stamp{right:12px;bottom:12px;font-size:.65rem}.s1{top:20px;left:18px}.s2{top:56px;right:18px}.s3{bottom:44px;left:20px}.s4{bottom:22px;right:72px}.info{grid-template-columns:minmax(0,1fr);padding-bottom:40px}.pill{display:none}nav{padding:17px 0}.actions>*{max-width:100%;text-align:center}.actions button{line-height:1.35;white-space:normal}.lead{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:no-preference){.sakura{animation:float 5s ease-in-out infinite}.s2{animation-delay:1s}.s3{animation-delay:2s}.s4{animation-delay:1.5s}@keyframes float{50%{transform:translateY(-10px) rotate(12deg)}}}
 
 /* High-contrast PDF toolbar actions: dark fill keeps the separate-view button readable on the light reader surface. */
@@ -110,9 +110,11 @@ footer span:last-child{color:var(--gold)}
 .photo-jesther img{object-position:50% 62%;}
 
 
-/* Officer directory: square, centered frames; contain preserves the complete submitted portrait. */
-.officer-directory{margin-top:34px;display:none;scroll-margin-top:18px}.officer-directory.open{display:block;animation:panelIn .35s ease-out}
-.officer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:14px}
+/* Officer directory: centered heading and content with balanced card widths. */
+.officer-directory{margin:34px auto 0;display:none;scroll-margin-top:18px;text-align:center;width:100%}.officer-directory.open{display:block;animation:panelIn .35s ease-out}
+.officer-directory>h2{margin:0 auto 10px;text-align:center;font-size:clamp(1.5rem,4vw,2.2rem)}
+.officer-directory>.section-note{max-width:780px;margin:0 auto 22px;text-align:center;color:var(--muted);line-height:1.7}
+.officer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:14px;justify-content:center;max-width:100%;margin-inline:auto}
 .officer-card{appearance:none;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;padding:14px;border:1px solid #ffffff20;border-radius:17px;background:linear-gradient(145deg,#ffffff10,#ffffff04);color:var(--ink);cursor:pointer;transition:transform .2s,border-color .2s}
 .officer-card:hover{transform:translateY(-3px);border-color:#e8c77799}
 .officer-square{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;display:grid;place-items:center;background:#fff;border:1px solid #ffffff28;color:var(--gold);font-size:.8rem;font-weight:850;letter-spacing:.06em;padding:12px}
@@ -212,11 +214,11 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
 
 
 /* Playful but polished interaction layer: sakura, stationery and committee-themed accents. */
-.fx-petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2000}
-.fx-petal{position:absolute;top:-40px;left:var(--x);font-size:var(--size);opacity:0;filter:drop-shadow(0 3px 5px #0003);animation:petalDrift var(--duration) cubic-bezier(.25,.55,.4,1) forwards}
-@keyframes petalDrift{0%{transform:translate3d(0,-5vh,0) rotate(0deg);opacity:0}10%{opacity:.95}100%{transform:translate3d(var(--drift),110vh,0) rotate(var(--spin));opacity:0}}
-.fx-burst{position:fixed;inset:0;pointer-events:none;z-index:2001;overflow:hidden}
-.fx-token{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);animation:tokenPop 1.25s cubic-bezier(.15,.75,.25,1) forwards;filter:drop-shadow(0 3px 4px #0003)}
+/* Effects sit above the modal so the click feedback is visible, without blocking taps. */
+.fx-petals,.fx-burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2147483001;isolation:isolate}
+.fx-petal{position:absolute;top:-40px;left:var(--x);font-size:var(--size);line-height:1;opacity:0;filter:drop-shadow(0 3px 6px #0008);will-change:transform,opacity;animation:petalDrift var(--duration) cubic-bezier(.25,.55,.4,1) forwards}
+@keyframes petalDrift{0%{transform:translate3d(0,-5vh,0) rotate(0deg);opacity:0}12%{opacity:1}88%{opacity:.95}100%{transform:translate3d(var(--drift),110vh,0) rotate(var(--spin));opacity:0}}
+.fx-token{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);line-height:1;animation:tokenPop 1.6s cubic-bezier(.15,.75,.25,1) forwards;filter:drop-shadow(0 3px 6px #0008);will-change:transform,opacity}
 @keyframes tokenPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-25deg)}18%{opacity:1;transform:translate(-50%,-65%) scale(1.2) rotate(8deg)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.7) rotate(var(--spin))}}
 .committee-card:active,.officer-card:active{transform:scale(.985)}
 .committee-modal.open .detail-block{animation:detailRise .38s both}
@@ -551,20 +553,25 @@ setDeskReady();
 
 <script>
 
-/* Tiny themed bursts keep the directory playful without interfering with navigation or content. */
+/* Reliable, visible decorative feedback; never interrupts the button action. */
 (function(){
- const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const reduced=(()=>{try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)}catch(_){return false}})();
+ function addLayer(className){const layer=document.createElement('div');layer.className=className;layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);return layer;}
  function burst(items,count=16){
-  if(reduced)return;
-  const layer=document.createElement('div');layer.className='fx-burst';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
-  for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-token';el.textContent=items[i%items.length];el.style.setProperty('--x',(18+Math.random()*64)+'%');el.style.setProperty('--y',(24+Math.random()*45)+'%');el.style.setProperty('--size',(18+Math.random()*17)+'px');el.style.setProperty('--dx',((Math.random()-.5)*260)+'px');el.style.setProperty('--dy',(-35-Math.random()*180)+'px');el.style.setProperty('--spin',((Math.random()-.5)*150)+'deg');layer.appendChild(el);}
-  window.setTimeout(()=>layer.remove(),1500);
+  try{
+   if(reduced||!Array.isArray(items)||!items.length||!document.body)return;
+   const layer=addLayer('fx-burst');
+   for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-token';el.textContent=items[i%items.length];el.style.setProperty('--x',(18+Math.random()*64)+'%');el.style.setProperty('--y',(24+Math.random()*45)+'%');el.style.setProperty('--size',(22+Math.random()*17)+'px');el.style.setProperty('--dx',((Math.random()-.5)*300)+'px');el.style.setProperty('--dy',(-45-Math.random()*200)+'px');el.style.setProperty('--spin',((Math.random()-.5)*180)+'deg');layer.appendChild(el);}
+   window.setTimeout(()=>layer.remove(),1900);
+  }catch(error){if(window.console&&console.debug)console.debug('BUOC decorative burst skipped.',error);}
  }
  function petals(count=24){
-  if(reduced)return;
-  const layer=document.createElement('div');layer.className='fx-petals';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
-  for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-petal';el.textContent=['🌸','✿','❀'][i%3];el.style.setProperty('--x',Math.random()*100+'%');el.style.setProperty('--size',(14+Math.random()*17)+'px');el.style.setProperty('--duration',(2.4+Math.random()*2.2)+'s');el.style.setProperty('--drift',((Math.random()-.5)*190)+'px');el.style.setProperty('--spin',((Math.random()-.5)*540)+'deg');el.style.animationDelay=(Math.random()*.35)+'s';layer.appendChild(el);}
-  window.setTimeout(()=>layer.remove(),5200);
+  try{
+   if(reduced||!document.body)return;
+   const layer=addLayer('fx-petals');
+   for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-petal';el.textContent=['🌸','✿','❀','✨'][i%4];el.style.setProperty('--x',Math.random()*100+'%');el.style.setProperty('--size',(20+Math.random()*13)+'px');el.style.setProperty('--duration',(3+Math.random()*2.2)+'s');el.style.setProperty('--drift',((Math.random()-.5)*220)+'px');el.style.setProperty('--spin',((Math.random()-.5)*600)+'deg');el.style.animationDelay=(Math.random()*.25)+'s';layer.appendChild(el);}
+   window.setTimeout(()=>layer.remove(),5700);
+  }catch(error){if(window.console&&console.debug)console.debug('BUOC decorative petals skipped.',error);}
  }
  window.BUOCFx={burst,petals};
 })();
