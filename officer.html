@@ -24,6 +24,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .item:hover{border-color:#73b7ff;background:#142543}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
+
+/* Sakura micro-interactions and a lively, anime-inspired dashboard. */
+:root{--sakura:#ffb9d0;--mint:#9fe7d4}
+body{background-image:radial-gradient(ellipse at 8% 0%,#294a78 0,transparent 38%),radial-gradient(ellipse at 92% 18%,#512e59 0,transparent 32%),linear-gradient(145deg,#101831,#0d172d 72%);background-attachment:fixed}
+header{box-shadow:0 10px 35px #0002}
+header h1{letter-spacing:-.035em}
+.panel{position:relative;overflow:hidden}
+.panel:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--gold),var(--blue),var(--sakura));opacity:.7;pointer-events:none}
+#dashboard>.panel:first-child{background:radial-gradient(ellipse at 100% 0%,#73b7ff12,transparent 45%),#182746ed}
+.stat{position:relative;overflow:hidden;background:linear-gradient(145deg,#142441,#0e1930);transition:transform .25s,border-color .25s,box-shadow .25s}
+.stat:after{content:"✿";position:absolute;right:9px;top:0;color:var(--sakura);font-size:25px;opacity:.14;transform:rotate(18deg)}
+.stat:hover{transform:translateY(-4px);border-color:var(--sakura);box-shadow:0 10px 25px #0002}
+.item{position:relative;overflow:hidden;border-left:3px solid transparent}
+.item.active{border-left-color:var(--gold);background:linear-gradient(100deg,#e8c77714,#101d36)}
+.item.active:after{content:"✦";position:absolute;right:12px;top:10px;color:var(--gold);animation:deskTwinkle 1.8s ease-in-out infinite}
+@keyframes deskTwinkle{50%{opacity:.35;transform:rotate(35deg) scale(.8)}}
+.reply{animation:replyIn .32s ease-out}
+@keyframes replyIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+#login{background:radial-gradient(ellipse at 100% 0%,#ffb9d015,transparent 45%),#182746ed}
+#login h2:after{content:"  ✿";color:var(--sakura);font-size:.8em}
+.fx-petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9999}
+.fx-petal{position:absolute;top:-35px;left:var(--x);font-size:var(--size);opacity:0;filter:drop-shadow(0 3px 5px #0003);animation:deskPetalFall var(--duration) ease-in forwards}
+@keyframes deskPetalFall{0%{transform:translateY(-5vh) rotate(0);opacity:0}12%{opacity:.9}100%{transform:translate(var(--drift),110vh) rotate(var(--spin));opacity:0}}
+.fx-burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}
+.fx-token{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);animation:deskTokenPop 1.25s cubic-bezier(.15,.75,.25,1) forwards}
+@keyframes deskTokenPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-25deg)}18%{opacity:1;transform:translate(-50%,-65%) scale(1.2) rotate(8deg)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.7) rotate(var(--spin))}}
+button:active{transform:scale(.97)}
+@media(prefers-reduced-motion:reduce){.fx-petal,.fx-token{display:none!important}.stat,.item,.reply{animation:none!important;transition:none!important}}
+
 </style></head>
 <body>
 <header><div><div class="gold">BICOL UNIVERSITY OTAKU CIRCLE</div><h1>Officer <span class="gold">Concern Desk</span></h1><div class="muted">Private reports · Authorized officers only</div></div><div class="row" style="flex:0 0 auto"><span id="who" class="muted"></span><button id="logout" class="secondary hidden">Log out</button></div></header>
@@ -61,4 +90,15 @@ $('replyForm').addEventListener('submit',async e=>{e.preventDefault();if(!select
 db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT')showLogin()});
 checkSession();
 })();
-</script></body></html>
+</script><script>
+
+(function(){
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function petals(count=22){if(reduced)return;const layer=document.createElement('div');layer.className='fx-petals';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-petal';el.textContent=['🌸','✿','❀'][i%3];el.style.setProperty('--x',Math.random()*100+'%');el.style.setProperty('--size',(14+Math.random()*16)+'px');el.style.setProperty('--duration',(2.5+Math.random()*2)+'s');el.style.setProperty('--drift',((Math.random()-.5)*170)+'px');el.style.setProperty('--spin',((Math.random()-.5)*500)+'deg');el.style.animationDelay=(Math.random()*.25)+'s';layer.appendChild(el)}window.setTimeout(()=>layer.remove(),5000)}
+ function burst(items,count=16){if(reduced)return;const layer=document.createElement('div');layer.className='fx-burst';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-token';el.textContent=items[i%items.length];el.style.setProperty('--x',(18+Math.random()*64)+'%');el.style.setProperty('--y',(22+Math.random()*48)+'%');el.style.setProperty('--size',(18+Math.random()*17)+'px');el.style.setProperty('--dx',((Math.random()-.5)*260)+'px');el.style.setProperty('--dy',(-35-Math.random()*170)+'px');el.style.setProperty('--spin',((Math.random()-.5)*150)+'deg');layer.appendChild(el)}window.setTimeout(()=>layer.remove(),1500)}
+ document.addEventListener('click',e=>{const report=e.target.closest('.item');if(report)petals(14);if(e.target.closest('#refresh'))petals(12);if(e.target.closest('#saveStatus'))burst(['✨','📌','🌸','✓'],10);if(e.target.closest('#sendReply'))burst(['💬','✉️','✨'],8)});
+ window.BUOCDeskFx={petals,burst};
+})();
+
+</script>
+</body></html>
