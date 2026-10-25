@@ -1,43 +1,56 @@
 # BUOC Official Website
 
-Bicol University Otaku Circle · Academic Year 2026–2027
+Bicol University Otaku Circle (BUOC) · Academic Year 2026–2027
 
-This repository contains the BUOC website, officer and committee directories, Constitution and By-Laws viewer, and the Concern & Inquiry Desk.
+The official BUOC website brings together organizational information, the officers directory, committee profiles, the Constitution and By-Laws (CBL) reader, and the private Concern & Inquiry Desk.
 
-## Concern & Inquiry Desk
+- **Live website:** https://kichiyz.github.io/buoc-anime-cbl-website/
+- **Repository:** https://github.com/kichiyz/buoc-anime-cbl-website
+- **Publishing branch:** `main` (GitHub Pages)
 
-The Concern Desk lets any website visitor submit an inquiry, concern, complaint, suggestion, or request with required name and email, optional contact information, and an optional attachment. Authorized officers can sign in, review reports, update statuses, and reply. Submitters can check replies and status with their report reference and email address.
+## Website features
 
-The public website is hosted on GitHub Pages. Private report data, authentication, and attachments use Supabase. The `buoc-email-notifications` Supabase Edge Function is deployed and connected to database webhooks for new concerns, status changes, and officer replies; email delivery uses Resend with a verified sender domain. See `SETUP_CONCERN_SYSTEM.md`, `supabase/EMAIL_NOTIFICATIONS.md`, and `supabase/schema.sql` for configuration and launch checks.
+- **Welcome and organization information:** responsive, Japanese/anime-inspired presentation.
+- **Officers directory:** interactive organizational chart and individual profiles with positions, committee/campus assignments, duties, and term/source notes where available. Nheil Rammstein R. Visayas is listed in two roles—Auditor and Chief Campus Representative for East Campus—and both are intentional.
+- **Committee directory:** Secretariat, Finance, Planning, Public Relations & Human Relations (PR-HR), and Ways and Means.
+- **CBL reader:** in-page, multi-page PDF.js reader with separate-open and download fallbacks. The source PDF is `assets/BUOC_CBL_Clean.pdf`.
+- **Concern & Inquiry Desk:** public submissions and private tracking; authorized officers can sign in through `officer.html`, review reports, update statuses, and reply. Backend services use Supabase; email notifications use the deployed `buoc-email-notifications` Edge Function and Resend.
 
-Never commit service-role keys, email-provider API keys, private credentials, or sensitive reports to this repository. `assets/concern-config.js` may contain only the public Supabase project URL and anon/publishable key.
+## Maintained files
 
-## Main files
+| Path | Purpose |
+|---|---|
+| `index.html` | Main public website, directories, CBL reader, and concern form |
+| `officer.html` | Authenticated officer workspace |
+| `assets/BUOC_CBL_Clean.pdf` | Published Constitution and By-Laws PDF |
+| `assets/officers/` | Public officer portraits used by the directory |
+| `assets/committee-logos/` | Committee artwork |
+| `assets/concern-config.js` | Public Supabase URL and publishable/anon key only |
+| `supabase/schema.sql` | Core database schema, policies, and RPCs |
+| `supabase/migrations/` | Versioned database changes; retain these for change history and reproducibility |
+| `supabase/functions/buoc-email-notifications/index.ts` | Durable queue, retry handling, and Resend delivery |
+| `supabase/EMAIL_NOTIFICATIONS.md` | Email queue, webhook, Vault, scheduler, and recovery guide |
+| `SETUP_CONCERN_SYSTEM.md` | Concern Desk architecture, setup, security, and launch checks |
 
-- `index.html` — website interface and interactive features.
-- `assets/` — officer photographs, committee logos, CBL PDF, and public configuration.
-- `assets/BUOC_CBL_Clean.pdf` — Constitution and By-Laws PDF.
-- `supabase/schema.sql` — tables, validation functions, row-level security policies, and private attachment bucket.
-- `supabase/functions/buoc-email-notifications/index.ts` — server-side Resend notifications triggered by Supabase Database Webhooks.
-- `SETUP_CONCERN_SYSTEM.md` — setup, deployment, and security checklist.
-- `.nojekyll` — GitHub Pages file handling.
+SQL scripts under `supabase/` are operational database scripts, not disposable temporary files. Review what each does before running it; do not execute destructive maintenance scripts on production data without confirming the target and backup/retention policy.
 
-## Deployment
+## Configuration and security
 
-Commit and push the website changes to the repository's publishing branch. Configure Supabase separately, authorize officer accounts individually, deploy the notification function, and test the form on desktop and mobile before announcing it. The website's existing CBL viewer, committee profiles, and officers directory remain in place.
+- `assets/concern-config.js` is loaded by the public site and officer portal. It may contain only the Supabase project URL and public anon/publishable key.
+- Never commit Supabase service-role keys, Resend API keys, webhook secrets, private credentials, or real concern records.
+- Keep officer access limited to individually authenticated, currently authorized accounts. Maintain row-level security and a private attachment bucket.
+- GitHub Pages is static hosting. Supabase configuration, database migrations, Edge Function deployment, Vault secrets, and scheduled queue draining are managed separately.
 
-Live site: https://kichiyz.github.io/buoc-anime-cbl-website/
-Repository: https://github.com/kichiyz/buoc-anime-cbl-website
+## Deployment and maintenance
 
+1. Review the intended changes and preserve the existing asset paths and working website features.
+2. Commit and push the public website changes to `main`.
+3. Apply database migrations in the correct order in Supabase, deploy Edge Function changes separately, and manage secrets only in approved secret stores.
+4. Test the welcome/navigation flow, committee profiles, officer profiles, all CBL pages on iOS and Android, and Concern Desk submission/tracking/officer workflows on desktop and mobile.
+5. Check browser console, Supabase function logs, and Resend delivery logs after tests. A provider-accepted email is not by itself proof that it reached the recipient's inbox.
 
-## Launch readiness
+## Privacy and publication
 
-Before announcing the Concern Desk:
-- Test submission, private lookup using both reference and submitting email, status changes, and officer replies with test data.
-- Confirm only active, individually authorized officer accounts can access the dashboard.
-- Verify the `concern-attachments` bucket is private and signed links expire.
-- Test the public form and officer dashboard on mobile and desktop, including invalid references and upload validation.
-- Review Resend delivery logs and Supabase function logs after tests.
-- Assign an officer to monitor incoming reports, define response expectations and escalation, and adopt a privacy/retention process before collecting real concerns.
+The public site exposes its HTML and public assets. Publish officer names, portraits, organizational records, and the CBL only when BUOC has authority to publish them. Do not include sensitive information in public profiles or email subjects. Define a report retention period and remove old concerns/attachments according to BUOC policy and applicable privacy requirements.
 
-Email is a notification channel; do not ask students to send sensitive details by replying to automated email. Never commit API keys, service-role keys, webhook secrets, or real concern records.
+The QR code should point to the live website URL; test it on multiple devices before printing or distributing it.
