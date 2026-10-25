@@ -39,9 +39,26 @@ async function sendOfficerEmails(subject: string, html: string) {
   const users = (userPayload.users ?? []) as Array<{id:string;email?:string}>;
   const emails = [...new Set(officers.map((o) => users.find((u) => u.id === o.user_id)?.email?.trim().toLowerCase() ?? "").filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))];
   if (!emails.length) throw new Error("No active officers have valid email addresses");
-  const results = await Promise.allSettled(emails.map((email) => sendEmail(email, subject, html)));
-  const failed = results.filter((result) => result.status === "rejected").length;
-  if (failed) throw new Error(`Officer notification delivery failed for ${failed} recipient(s)`);
+  const results = await Promise.allSettled(emails.map(async (email) => {
+    try {
+      await sendEmail(email, subject, html);
+      console.log("BUOC officer email accepted by Resend", { recipient: email });
+      return { recipient: email, ok: true as const };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("BUOC officer email failed", { recipient: email, error: message });
+      throw new Error(`${email}: ${message}`);
+    }
+  }));
+  const failures = results.flatMap((result) =>
+    result.status === "rejected"
+      ? [result.reason instanceof Error ? result.reason.message : String(result.reason)]
+      : []
+  );
+  if (failures.length) {
+    console.error("BUOC officer email failure summary", { failedCount: failures.length, failures });
+    throw new Error(`Officer notification delivery failed for ${failures.length} recipient(s)`);
+  }
 }
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
