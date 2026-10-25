@@ -405,44 +405,62 @@ document.getElementById('officerDirectory').addEventListener('click',e=>{const c
 modalClose.addEventListener('click',closeCommittee);modal.addEventListener('click',e=>{if(e.target===modal)closeCommittee()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeCommittee()});
 
 // Render every PDF page into the document flow instead of relying on Safari's native iframe viewer.
-(async function renderCBL(){
+(function renderCBL(){
   const status=document.getElementById('pdfStatus');
   const pages=document.getElementById('pdfPages');
   const fallback=document.getElementById('pdfFallback');
   if(!window.pdfjsLib){status.textContent='Inline PDF viewer could not load.';fallback.hidden=false;return;}
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  try{
-    const pdf=await pdfjsLib.getDocument({url:'assets/BUOC_CBL_Clean.pdf'}).promise;
-    status.textContent=`Loading ${pdf.numPages} pages…`;
-    for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
-      const page=await pdf.getPage(pageNumber);
+  let pdfDoc=null,rendered=0,failed=false;
+  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  async function renderPage(wrapper,pageNumber){
+    if(wrapper.dataset.renderState!=='waiting'||!pdfDoc)return;
+    wrapper.dataset.renderState='rendering';
+    try{
+      const page=await pdfDoc.getPage(pageNumber);
       const base=page.getViewport({scale:1});
       const availableWidth=Math.max(240,Math.min(pages.clientWidth||900,900));
-      const scale=Math.min(2,availableWidth/base.width);
+      // Keep canvases modest on high-DPI/large displays to reduce memory use.
+      const scale=Math.min(1.35,availableWidth/base.width);
       const viewport=page.getViewport({scale});
-      const wrapper=document.createElement('div');
-      wrapper.className='pdf-page-wrap';
-      const canvas=document.createElement('canvas');
-      canvas.className='pdf-page';
-      canvas.setAttribute('role','img');
-      canvas.setAttribute('aria-label',`Page ${pageNumber} of ${pdf.numPages}`);
-      canvas.width=Math.floor(viewport.width);
-      canvas.height=Math.floor(viewport.height);
-      canvas.style.aspectRatio=`${viewport.width} / ${viewport.height}`;
+      const canvas=wrapper.querySelector('canvas');
+      canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
+      canvas.style.aspectRatio=viewport.width+' / '+viewport.height;
       const context=canvas.getContext('2d',{alpha:false});
       await page.render({canvasContext:context,viewport}).promise;
-      const label=document.createElement('div');
-      label.className='pdf-page-label';label.textContent=`Page ${pageNumber} of ${pdf.numPages}`;
-      wrapper.append(canvas,label);pages.append(wrapper);
-      status.textContent=`Rendered ${pageNumber} of ${pdf.numPages} pages`;
+      wrapper.dataset.renderState='done';rendered++;
+      status.textContent=rendered===pdfDoc.numPages
+        ? 'All '+pdfDoc.numPages+' pages are ready. Scroll to read the complete Constitution & By-Laws.'
+        : 'Loaded '+rendered+' of '+pdfDoc.numPages+' pages as you browse.';
+      page.cleanup();
+    }catch(error){
+      wrapper.dataset.renderState='waiting';
+      console.warn('Could not render CBL page '+pageNumber,error);
+      if(!failed){status.textContent='Some pages could not be rendered. You can open the complete PDF using the fallback link below.';fallback.hidden=false;failed=true;}
     }
-    status.textContent=`All ${pdf.numPages} pages loaded. Scroll down to continue reading.`;
-  }catch(error){
-    console.error('Unable to render BUOC CBL PDF:',error);
-    status.textContent='The inline viewer could not load the PDF.';
-    fallback.hidden=false;
   }
-})();
+  (async()=>{
+    try{
+      const task=pdfjsLib.getDocument({url:'assets/BUOC_CBL_Clean.pdf',useWorkerFetch:true});
+      pdfDoc=await task.promise;
+      status.textContent='The '+pdfDoc.numPages+'-page CBL is ready. Pages load as you scroll.';
+      const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{if(entry.isIntersecting){const wrap=entry.target;observer.unobserve(wrap);renderPage(wrap,Number(wrap.dataset.page));}});
+      },{rootMargin:'700px 0px',threshold:0.01}):null;
+      for(let pageNumber=1;pageNumber<=pdfDoc.numPages;pageNumber++){
+        const wrapper=document.createElement('div');wrapper.className='pdf-page-wrap';wrapper.dataset.page=String(pageNumber);wrapper.dataset.renderState='waiting';
+        const canvas=document.createElement('canvas');canvas.className='pdf-page';canvas.setAttribute('role','img');canvas.setAttribute('aria-label','Page '+pageNumber+' of '+pdfDoc.numPages);canvas.style.width='100%';canvas.style.height='auto';canvas.style.background='#fff';
+        const label=document.createElement('div');label.className='pdf-page-label';label.textContent='Page '+pageNumber+' of '+pdfDoc.numPages;
+        wrapper.append(canvas,label);pages.append(wrapper);
+        if(observer)observer.observe(wrapper);else await renderPage(wrapper,pageNumber);
+      }
+    }catch(error){
+      console.error('Unable to load BUOC CBL PDF:',error);
+      status.textContent='The inline viewer could not load the PDF.';
+      fallback.hidden=false;
+    }
+  })();
+})();;
 
 // Concern Desk: set these two public project values in assets/concern-config.js.
 // The Supabase anon/publishable key is intended for browser use; never put service_role keys here.
