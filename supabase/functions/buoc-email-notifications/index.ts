@@ -37,7 +37,7 @@ async function sendOfficerEmails(subject: string, html: string) {
   if (!userResponse.ok) throw new Error("Could not load authorized officer email addresses");
   const userPayload = await userResponse.json();
   const users = (userPayload.users ?? []) as Array<{id:string;email?:string}>;
-  const emails = [...new Set(officers.map((o) => users.find((u) => u.id === o.user_id)?.email?.trim().toLowerCase() ?? "").filter((email) => /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)))];
+  const emails = [...new Set(officers.map((o) => users.find((u) => u.id === o.user_id)?.email?.trim().toLowerCase() ?? "").filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))];
   if (!emails.length) throw new Error("No active officers have valid email addresses");
   const results = await Promise.allSettled(emails.map((email) => sendEmail(email, subject, html)));
   const failed = results.filter((result) => result.status === "rejected").length;
