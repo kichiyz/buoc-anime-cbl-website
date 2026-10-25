@@ -140,7 +140,7 @@ async function drainQueue() {
       const permanent = error.status !== undefined && error.status >= 400 && error.status < 500 && error.status !== 429;
       const exhausted = job.attempts >= MAX_ATTEMPTS;
       if (daily) {
-        // Pause the entire claimed batch and all remaining work until tomorrow-ish; do not hammer Resend.
+        // Pause every due job, not just the claimed batch, to prevent each cron tick from hitting the exhausted quota.
         const resumeAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
         await updateJob(job.id, { status: "pending", next_attempt_at: resumeAt, locked_at: null, last_error: message });
         deferred++;
@@ -148,7 +148,28 @@ async function drainQueue() {
           await updateJob(restJob.id, { status: "pending", next_attempt_at: resumeAt, locked_at: null, last_error: "Paused because Resend daily quota was exhausted." });
           deferred++;
         }
-        console.error("BUOC queue paused for Resend daily quota exhaustion", { jobId: job.id, remainingDeferred: jobs.length-index-1, resumeAt });
+        const pauseAll = await rest("buoc_email_jobs?status=eq.pending", {
+          method: "PATCH",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ next_attempt_at: resumeAt, last_error: "Paused because Resend daily quota was exhausted.", updated_at: new Date().toISOString() }),
+        });
+        if (!pauseAll.ok) console.error("BUOC could not pause all pending queue jobs", { status: pauseAll.status });
+        console.error("BUOC queue paused for Resend daily quota exhaustion", { jobId: job.id, claimedDeferred: deferred, resumeAt, allPendingPaused: pauseAll.ok });
+        break;
+      }
+      // Configuration problems such as invalid API credentials or an unverified sender may be
+      // fixed by an administrator; keep those messages recoverable instead of dead-lettering them.
+      const configurationFailure = error.status === 401 || error.status === 403;
+      if (configurationFailure) {
+        const next = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString();
+        await updateJob(job.id, { status: "pending", next_attempt_at: next, locked_at: null, last_error: message });
+        deferred++;
+        const pauseRest = jobs.slice(index + 1);
+        for (const restJob of pauseRest) {
+          await updateJob(restJob.id, { status: "pending", next_attempt_at: next, locked_at: null, last_error: "Paused because Resend returned a configuration/authentication error." });
+          deferred++;
+        }
+        console.error("BUOC queue paused after Resend configuration/authentication error", { status: error.status, resumeAt: next, claimedDeferred: deferred });
         break;
       }
       if (permanent || exhausted) {
