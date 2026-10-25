@@ -35,16 +35,9 @@ To revoke access, set `active=false` or delete that officer row. Keep the office
 
 ## 3. Email notifications
 
-The deployed `buoc-email-notifications` Edge Function sends Resend notifications from three Supabase Database Webhooks: concern INSERT, concern UPDATE (status changes only), and officer reply INSERT. The function checks a private `x-webhook-secret` header and reads its API key and sender from Edge Function secrets. Do not call it directly from browser code.
+Follow the maintained, complete deployment and recovery guide in [supabase/EMAIL_NOTIFICATIONS.md](supabase/EMAIL_NOTIFICATIONS.md). It documents the durable queue migration, the Edge Function deployment, all three database webhooks, secrets, automatic queue-drain scheduling, retries, dead-letter inspection, and controlled testing.
 
-- verifies the caller's Supabase JWT and `buoc_is_officer()` authorization;
-- accepts only `event_type` of `reply` or `status` and a valid concern ID;
-- fetches the report and recent reply using server-side credentials;
-- sends an email to the submitter using a provider API key stored as an Edge Function secret (for example `RESEND_API_KEY`) and a verified sender address;
-- never returns the report or private contact details to an unauthenticated caller;
-- applies request limits and logs delivery failures without logging the full report body.
-
-Set the function secrets in Supabase, not in this repository. Add an INSERT database webhook or a separate edge-function call if you also want an automatic email receipt immediately after initial submission. Test email delivery, spam-folder behavior, and bounced addresses before announcing the system. Email is a notification channel; private replies remain in the website report thread.
+Important: the notification queue migration must be applied in Supabase SQL Editor before deploying the queue-enabled function. Set up the scheduled drain (Supabase pg_cron + pg_net + Vault, or a trusted external scheduler) so pending messages are retried even when no new concern/reply/status webhook arrives. Never put the Resend API key, service-role key, or webhook secret in browser code or GitHub.
 
 ## 4. Security checklist before launch
 
