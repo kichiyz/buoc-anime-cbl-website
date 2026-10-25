@@ -16,8 +16,7 @@ body{margin:0;background:radial-gradient(ellipse at 15% 0%,#303b69 0,transparent
 body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:radial-gradient(var(--gold) .7px,transparent .7px);background-size:24px 24px}
 .wrap{width:min(1080px,100% - 32px);margin:auto;position:relative}
 nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid #ffffff20;gap:16px}
-.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.09em;font-size:.86rem;min-width:0}.brand-logo{width:46px;height:46px;object-fit:contain;flex:0 0 auto;border-radius:50%;background:#fff;padding:3px;box-shadow:0 0 0 1px #ffffff40}.brand-name{display:block}.brand span{color:var(--gold)}
-@media(max-width:560px){nav{align-items:flex-start;flex-wrap:wrap}.brand-logo{width:40px;height:40px}.pill{margin-left:52px}}
+.brand{font-weight:900;letter-spacing:.09em;font-size:.86rem;min-width:0}.brand-name{display:block}.brand span{color:var(--gold)}
 .pill{border:1px solid #ffffff40;border-radius:999px;padding:7px 12px;color:var(--muted);font-size:.75rem;letter-spacing:.08em}
 .hero{padding:70px 0 48px;display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
 .kicker{color:var(--gold);letter-spacing:.24em;text-transform:uppercase;font-size:.76rem;font-weight:800}
@@ -39,6 +38,8 @@ button:hover,.button:hover{transform:translateY(-2px);filter:brightness(1.07)}
 .post{position:absolute;top:38px;width:18px;height:112px;background:linear-gradient(90deg,#7d203e,#d54857,#8d233f);border-radius:3px}
 .post.left{left:20px}.post.right{right:20px}
 .cross{position:absolute;top:78px;left:33px;width:124px;height:10px;background:#e8c777}
+.hero-logo{position:absolute;z-index:3;top:22px;right:22px;width:clamp(76px,11vw,112px);height:clamp(76px,11vw,112px);object-fit:contain;border-radius:50%;padding:5px;background:#fff;box-shadow:0 8px 30px #0005;border:2px solid #e8c777}
+@media(max-width:560px){.hero-logo{width:78px;height:78px;top:14px;right:14px}}
 .stamp{position:absolute;right:22px;bottom:20px;border:1px solid var(--gold);color:var(--gold);padding:8px 11px;transform:rotate(-7deg);font-size:.72rem;letter-spacing:.16em}
 .sakura{position:absolute;color:#ffc5d1;font-size:24px;opacity:.9}.s1{top:30px;left:30px}.s2{top:80px;right:36px}.s3{bottom:60px;left:44px}.s4{bottom:34px;right:100px}
 .explore-panel{display:none;padding:12px 0 58px;scroll-margin-top:18px;opacity:0;transform:translateY(-10px) scale(.99)}
@@ -228,7 +229,7 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
 </head>
 <body>
 <div class="wrap">
-<nav><div class="brand"><img class="brand-logo" src="./BUOC%20Logo.png" alt="Official Bicol University Otaku Circle (BUOC) logo"><span class="brand-name">BU <span>OTAKU CIRCLE</span></span></div><div class="pill">BICOL UNIVERSITY · AY 2026–2027</div></nav>
+<nav><div class="brand"><span class="brand-name">BU <span>OTAKU CIRCLE</span></span></div><div class="pill">BICOL UNIVERSITY · AY 2026–2027</div></nav>
 <main>
 <section class="hero" id="welcome">
 <div>
@@ -240,7 +241,8 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
 <button class="primary" id="exploreBtn" type="button" aria-expanded="false" aria-controls="about">Explore BUOC ↓</button>
 </div>
 </div>
-<div class="art" aria-label="Japanese-inspired illustration of a torii gate and rising sun" role="img">
+<div class="art" aria-label="Japanese-inspired illustration of a torii gate and rising sun with the official BUOC logo">
+<img class="hero-logo" src="./BUOC%20Logo.png" alt="Official Bicol University Otaku Circle logo">
 <div class="sun"></div><div class="gate"><div class="post left"></div><div class="post right"></div><div class="cross"></div></div>
 <span class="sakura s1">✿</span><span class="sakura s2">✿</span><span class="sakura s3">✿</span><span class="sakura s4">✿</span>
 <div class="stamp">文化 · COMMUNITY</div>
@@ -290,13 +292,10 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
   <div class="org-subtier committee-head-row" aria-label="PR-HR Committee head">
    <button class="org-node" type="button" data-officer="pio"><span class="org-photo">PHOTO<br>COMING SOON</span><strong>Virged D. Jao</strong><small>Public Information Officer · Head</small></button>
   </div>
-  <div class="org-tier-label sub-label">PR-HR Committee · Co-head</div>
-  <div class="org-subtier committee-cohead-row" aria-label="PR-HR Committee co-head">
-   <div class="org-node"><span class="org-photo">PROFILE<br>TO BE ADDED</span><strong>Co-head to be confirmed</strong><small>PR-HR Committee · Co-head</small></div>
-  </div>
+  
   <div class="org-tier-label sub-label">Auditor</div>
   <div class="org-subtier committee-head-row" aria-label="Auditor">
-   <button class="org-node" type="button" data-officer="auditor"><span class="org-photo"><img src="assets/officers/nheil.webp" alt="Nheil Rammstein R. Visayas" loading="lazy"></span><strong>Nheil Rammstein R. Visayas</strong><small>Auditor · Chief Campus Representative – East</small></button>
+   <button class="org-node" type="button" data-officer="auditor"><span class="org-photo"><img src="assets/officers/nheil.webp" alt="Nheil Rammstein R. Visayas" loading="lazy"></span><strong>Nheil Rammstein R. Visayas</strong><small>Auditor</small></button>
   </div>
  </div>
  <div class="org-branches">
@@ -401,8 +400,8 @@ const officerData=[
  {id:'jesther',name:'Jesther A. Millete',position:'Business Manager · Co-head (directory designation)',committee:'Ways and Means Committee',photo:'assets/officers/jesther.webp',duties:['Allocate resources to accomplish organizational goals and objectives efficiently and effectively.','Serve as a Business Manager and head of the Ways and Means Committee under the CBL wording.','Act as property custodian and give members consent to use organizational facilities and materials.'],source:'BUOC CBL, Article VIII, Section 9; Article IX, Section 4. The CBL refers to Business Managers collectively as heads of Ways and Means.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Directory designation supplied by BUOC.'},
  {id:'kean',name:'Kean France Althea M. Argana',position:'Business Manager · Co-head (directory designation)',committee:'Ways and Means Committee',photo:'assets/officers/kean.webp',duties:['Allocate resources to accomplish organizational goals and objectives efficiently and effectively.','Serve as a Business Manager and head of the Ways and Means Committee under the CBL wording.','Act as property custodian and give members consent to use organizational facilities and materials.'],source:'BUOC CBL, Article VIII, Section 9; Article IX, Section 4. The CBL refers to Business Managers collectively as heads of Ways and Means.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Directory designation supplied by BUOC.'},
  {id:'lyn',name:'Lyn Rose N. Manuel',position:'Chief Campus Representative · Daraga Campus',committee:'Campus Representatives',photo:'assets/officers/lyn.webp',duties:['Represent BUOC at the assigned campus.','Assist the Executive Committee in coordinating and implementing campus-specific activities.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Campus assignment supplied by BUOC.'},
- {id:'auditor',name:'Nheil Rammstein R. Visayas',position:'Auditor · Chief Campus Representative, East Campus',committee:'Auditing · East Campus Representation',photo:'assets/officers/nheil.webp',duties:['Examine and help verify BUOC financial records and reports.','Serve as Chief Campus Representative for the East Campus.','Represent BUOC at the assigned campus and assist with campus-specific activities.'],source:'BUOC officer roster supplied by the organization.',term:'One (1) academic year for elected officers, subject to the current BUOC CBL.',status:'One officer holds both the Auditor and Chief Campus Representative – East Campus positions.'},
- {id:'nheil',name:'Nheil Rammstein R. Visayas',position:'Chief Campus Representative · East Campus',committee:'Campus Representatives',photo:'assets/officers/nheil.webp',duties:['Represent BUOC at the assigned campus.','Assist the Executive Committee in coordinating and implementing campus-specific activities.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Campus assignment supplied by BUOC.'},
+ {id:'auditor',name:'Nheil Rammstein R. Visayas',position:'Auditor',committee:'Auditing',photo:'assets/officers/nheil.webp',duties:['Examine and help verify BUOC financial records and reports.','Review financial documentation for completeness and consistency.','Report audit observations through the organization’s established reporting process.'],source:'BUOC officer roster supplied by the organization; audit duties should be checked against the current BUOC CBL.',term:'One (1) academic year for elected officers, subject to the current BUOC CBL.',status:'This profile displays the Auditor role only.'},
+ {id:'nheil',name:'Nheil Rammstein R. Visayas',position:'Chief Campus Representative · East Campus',committee:'Campus Representatives · East Campus',photo:'assets/officers/nheil.webp',duties:['Represent BUOC at the East Campus.','Coordinate with the Executive Committee on East Campus activities and member concerns.','Help communicate campus-specific announcements and updates to East Campus members.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'This profile displays the Chief Campus Representative – East Campus role only.'},
  {id:'resha',name:'Resha Marie S. Luna',position:'Chief Campus Representative · Main Campus',committee:'Campus Representatives',photo:null,duties:['Represent BUOC at the assigned campus.','Assist the Executive Committee in coordinating and implementing campus-specific activities.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Photo coming soon.'},
  {id:'aubrey',name:'Aubrey Rose B. Borillo',position:'Deputy Campus Representative · East Campus',committee:'Campus Representatives',photo:'assets/officers/aubrey.webp',duties:['Represent BUOC at the assigned campus.','Assist the Executive Committee in coordinating and implementing campus-specific activities.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Campus assignment supplied by BUOC.'},
  {id:'jemima',name:'Jemima Ruby G. Bitancor',position:'Deputy Campus Representative · Main Campus',committee:'Campus Representatives',photo:'assets/officers/jemima.webp',duties:['Represent BUOC at the assigned campus.','Assist the Executive Committee in coordinating and implementing campus-specific activities.'],source:'BUOC CBL, Article VIII, Section 11; campus assignment supplied by BUOC.',term:'One (1) academic year for elected officers (Article XI, Sections 7–8).',status:'Campus assignment supplied by BUOC.'},
