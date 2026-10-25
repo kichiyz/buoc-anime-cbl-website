@@ -20,7 +20,7 @@ The function intentionally disables JWT verification because Supabase Database W
 
 Set secrets (replace values locally; do not commit them):
 ```sh
-supabase secrets set RESEND_API_KEY="re_..." RESEND_FROM="BUOC Concern Desk <your-verified-sender>" OFFICER_NOTIFICATION_EMAIL="your-officer-inbox@example.com" BUOC_EMAIL_WEBHOOK_SECRET="a-long-random-secret" 
+supabase secrets set RESEND_API_KEY="re_..." RESEND_FROM="BUOC Concern Desk <your-verified-sender>" BUOC_EMAIL_WEBHOOK_SECRET="a-long-random-secret" 
 ``
 Generate a strong secret locally, for example with `openssl rand -hex 32`. Use the same value in the Database Webhook header. The function also uses Supabase's platform-provided `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; do not manually publish either in frontend code.
 
@@ -40,7 +40,7 @@ If the UI allows selecting columns for UPDATE, leave it to send the full old and
 
 ## 4. Current deployment and safe testing
 
-The project has the `buoc-email-notifications` function deployed with JWT verification disabled and its own `x-webhook-secret` validation. The three database webhooks are configured for concern INSERT, concern UPDATE, and reply INSERT. The verified sending domain is `buoc-otaku-circle.isroot.in`; the configured sender is `BUOC Concern Desk <notifications@buoc-otaku-circle.isroot.in>`. Keep all secrets only in Supabase and never copy them into this file or public code.
+The project has previously used the `buoc-email-notifications` function with JWT verification disabled and its own `x-webhook-secret` validation. Confirm the function is redeployed after code changes and that the three database webhooks are enabled for concern INSERT, concern UPDATE, and reply INSERT. The verified sending domain is `buoc-otaku-circle.isroot.in`; the configured sender is `BUOC Concern Desk <notifications@buoc-otaku-circle.isroot.in>`. The function looks up all active `buoc_officers` and maps their `user_id` to Auth email addresses; every active officer must have an individual Supabase Auth account with the correct email. Keep all secrets only in Supabase and never copy them into this file or public code.
 
 
 1. Submit a test concern using an inbox you control. Confirm the submitter acknowledgement and officer alert arrive.
@@ -54,4 +54,4 @@ The project has the `buoc-email-notifications` function deployed with JWT verifi
 - The function never sends attachments or signed attachment links by email.
 - This function sends notification emails only; replies are still posted through the existing dashboard / concern lookup workflow.
 - Do not put API keys, service-role keys, or the webhook secret in GitHub Pages files, SQL committed to the repository, or public issue comments.
-- The submitter's email address is user-provided; the function sends only to that address and the configured officer inbox.
+- The submitter's email address is user-provided; the function sends only to that address and each active officer's registered email address.
