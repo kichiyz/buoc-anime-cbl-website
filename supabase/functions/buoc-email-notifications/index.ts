@@ -123,6 +123,20 @@ async function sendOne(job: EmailJob): Promise<{id:string|null}> {
   throw error;
 }
 async function drainQueue() {
+  const controlResponse = await rest("buoc_email_queue_control?id=eq.true&select=pause_until,pause_reason");
+  if (!controlResponse.ok) throw new Error(`Could not read notification queue circuit breaker (HTTP ${controlResponse.status})`);
+  const controlRows = await controlResponse.json() as Array<{pause_until:string|null;pause_reason:string|null}>;
+  const control = controlRows[0];
+  if (control?.pause_until && Date.parse(control.pause_until) > Date.now()) {
+    console.warn("BUOC queue drain skipped by circuit breaker", { pauseUntil: control.pause_until, reason: control.pause_reason });
+    return { claimed: 0, sent: 0, deferred: 0, dead: 0, paused: true, pauseUntil: control.pause_until };
+  }
+  if (control?.pause_until) {
+    await rest("buoc_email_queue_control?id=eq.true", {
+      method: "PATCH", headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({ pause_until: null, pause_reason: null, updated_at: new Date().toISOString() }),
+    });
+  }
   const jobs = await claimJobs();
   let sent = 0, deferred = 0, dead = 0;
   console.log("BUOC notification queue drain started", { claimed: jobs.length });
@@ -142,6 +156,10 @@ async function drainQueue() {
       if (daily) {
         // Pause every due job, not just the claimed batch, to prevent each cron tick from hitting the exhausted quota.
         const resumeAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
+        await rest("buoc_email_queue_control?id=eq.true", {
+          method: "PATCH", headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ pause_until: resumeAt, pause_reason: "Resend daily email quota exhausted", updated_at: new Date().toISOString() }),
+        });
         await updateJob(job.id, { status: "pending", next_attempt_at: resumeAt, locked_at: null, last_error: message });
         deferred++;
         for (const restJob of jobs.slice(index + 1)) {
@@ -162,6 +180,10 @@ async function drainQueue() {
       const configurationFailure = error.status === 401 || error.status === 403;
       if (configurationFailure) {
         const next = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString();
+        await rest("buoc_email_queue_control?id=eq.true", {
+          method: "PATCH", headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ pause_until: next, pause_reason: `Resend HTTP ${error.status} configuration/authentication failure`, updated_at: new Date().toISOString() }),
+        });
         await updateJob(job.id, { status: "pending", next_attempt_at: next, locked_at: null, last_error: message });
         deferred++;
         const pauseRest = jobs.slice(index + 1);
