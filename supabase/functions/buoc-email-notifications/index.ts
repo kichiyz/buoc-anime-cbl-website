@@ -20,6 +20,13 @@ function esc(value: unknown): string {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+class ResendDailyQuotaExceededError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ResendDailyQuotaExceededError";
+  }
+}
+
 async function sendEmail(to: string, subject: string, html: string) {
   const maxAttempts = 4;
 
@@ -46,7 +53,16 @@ async function sendEmail(to: string, subject: string, html: string) {
     }
 
     const status = response.status;
-    const body = (await response.text()).slice(0, 300);
+    const body = (await response.text()).slice(0, 1000);
+
+    // A daily quota cannot be fixed by short retries. Stop immediately to avoid
+    // wasting execution time and generating repeated, guaranteed-to-fail requests.
+    if (status === 429 && /daily_quota_exceeded|daily email sending quota/i.test(body)) {
+      throw new ResendDailyQuotaExceededError(
+        `Resend daily email quota exhausted; no retry attempted: ${body.slice(0, 300)}`,
+      );
+    }
+
     const retryable = status === 429 || status >= 500;
     if (!retryable || attempt === maxAttempts) {
       throw new Error(`Resend error ${status} after ${attempt} attempt(s): ${body}`);
@@ -78,8 +94,12 @@ async function sendOfficerEmails(subject: string, html: string) {
   const emails = [...new Set(officers.map((o) => users.find((u) => u.id === o.user_id)?.email?.trim().toLowerCase() ?? "").filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))];
   if (!emails.length) throw new Error("No active officers have valid email addresses");
   const failures: string[] = [];
+  let dailyQuotaExhausted = false;
+  let attempted = 0;
   // Send sequentially to avoid bursting past Resend's 10-requests-per-second limit.
-  for (const email of emails) {
+  for (let index = 0; index < emails.length; index++) {
+    const email = emails[index];
+    attempted++;
     try {
       await sendEmail(email, subject, html);
       console.log("BUOC officer email accepted by Resend", { recipient: email });
@@ -87,12 +107,33 @@ async function sendOfficerEmails(subject: string, html: string) {
       const message = error instanceof Error ? error.message : String(error);
       console.error("BUOC officer email failed", { recipient: email, error: message });
       failures.push(`${email}: ${message}`);
+      if (error instanceof ResendDailyQuotaExceededError) {
+        dailyQuotaExhausted = true;
+        const skipped = emails.length - index - 1;
+        console.error("BUOC officer notifications stopped because Resend daily quota is exhausted", {
+          attempted,
+          skipped,
+          totalRecipients: emails.length,
+          note: "Remaining messages were not attempted; retry after the Resend quota resets or is increased.",
+        });
+        break;
+      }
     }
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await delay(150);
   }
   if (failures.length) {
-    console.error("BUOC officer email failure summary", { failedCount: failures.length, failures });
-    throw new Error(`Officer notification delivery failed for ${failures.length} recipient(s)`);
+    console.error("BUOC officer email failure summary", {
+      failedCount: failures.length,
+      failures,
+      dailyQuotaExhausted,
+      attempted,
+      totalRecipients: emails.length,
+    });
+    throw new Error(
+      dailyQuotaExhausted
+        ? `Resend daily email quota exhausted; officer notifications stopped after ${attempted} of ${emails.length} recipients. Retry after quota reset or increase the Resend plan quota.`
+        : `Officer notification delivery failed for ${failures.length} recipient(s)`,
+    );
   }
 }
 serve(async (req) => {
