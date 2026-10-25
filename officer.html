@@ -52,6 +52,12 @@ header h1{letter-spacing:-.035em}
 .fx-burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}
 .fx-token{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);animation:deskTokenPop 1.25s cubic-bezier(.15,.75,.25,1) forwards}
 @keyframes deskTokenPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-25deg)}18%{opacity:1;transform:translate(-50%,-65%) scale(1.2) rotate(8deg)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.7) rotate(var(--spin))}}
+/* Report rows stay inside the scroll viewport: avoid the global button lift animation that clipped cards at the list edges. */
+.list{padding:5px;scroll-padding-block:8px;overscroll-behavior:contain}
+.item,.item:hover:not(:disabled),.item:focus-visible,.item:active{transform:none;filter:none}
+.item:hover:not(:disabled){box-shadow:none}
+.item{overflow-wrap:anywhere;min-width:0;white-space:normal}
+.item strong,.item .muted{overflow-wrap:anywhere;word-break:break-word}
 button:active{transform:scale(.97)}
 @media(prefers-reduced-motion:reduce){.fx-petal,.fx-token{display:none!important}.stat,.item,.reply{animation:none!important;transition:none!important}}
 
