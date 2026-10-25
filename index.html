@@ -148,6 +148,52 @@ footer span:last-child{color:var(--gold)}
 .concern-panel h2{margin-top:0}.concern-intro{max-width:760px;color:var(--muted);line-height:1.7}.concern-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.concern-field{display:flex;flex-direction:column;gap:7px;min-width:0}.concern-field.full{grid-column:1/-1}.concern-field label{font-weight:700;color:var(--ink);font-size:.92rem}.concern-field input,.concern-field select,.concern-field textarea{width:100%;box-sizing:border-box;border:1px solid #4a5274;border-radius:10px;background:#101831;color:var(--ink);padding:12px 13px;font:inherit;min-height:44px}.concern-field textarea{min-height:140px;resize:vertical}.concern-field input:focus,.concern-field select:focus,.concern-field textarea:focus{outline:2px solid var(--gold);outline-offset:2px}.concern-help{font-size:.82rem;color:var(--muted);line-height:1.5}.concern-status{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;display:none;white-space:pre-wrap;overflow-wrap:anywhere}.concern-status.show{display:block}.concern-status.error{border-color:#e94b5b;color:#ffdce0}.concern-status.ok{border-color:#4d9e7c;color:#d3ffea}.concern-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.concern-admin{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}.concern-admin summary{cursor:pointer;font-weight:800;color:var(--gold)}.concern-admin-box{padding-top:18px}.concern-admin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.concern-report-list{display:grid;gap:12px;margin-top:18px}.concern-report{border:1px solid var(--line);background:#101831;border-radius:12px;padding:15px}.concern-report h3{margin:0 0 8px;font-size:1rem}.concern-report p{white-space:pre-wrap;overflow-wrap:anywhere}.concern-report small{color:var(--muted)}.concern-thread{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}.concern-thread-item{padding:9px 0;border-bottom:1px solid #ffffff15;white-space:pre-wrap;overflow-wrap:anywhere}.concern-thread textarea{width:100%;box-sizing:border-box;min-height:75px;background:#101831;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit}.concern-privacy{font-size:.84rem;color:var(--muted);line-height:1.55;margin-top:14px}
 @media(max-width:650px){.concern-grid,.concern-admin-grid{grid-template-columns:minmax(0,1fr)}.concern-field.full{grid-column:auto}.concern-actions>*{width:100%}}
 
+
+/* Refined anime-inspired polish: restrained motion, readable contrast, and mobile-safe layouts. */
+:root{--ease-sakura:cubic-bezier(.2,.75,.25,1)}
+html{scroll-padding-top:18px}
+body{background-attachment:fixed}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.22;background:linear-gradient(115deg,transparent 0 48%,#ffffff05 49% 50%,transparent 51% 100%);background-size:42px 42px}
+.wrap{z-index:1}
+nav{position:relative}
+.brand{display:flex;align-items:center;gap:7px}
+.brand:before{content:"✿";color:var(--gold);font-size:1.15rem;animation:petalTurn 18s linear infinite}
+.pill{backdrop-filter:blur(10px);background:#10183155}
+.hero>div:first-child{animation:softRise .7s var(--ease-sakura) both}
+.hero .art{animation:softRise .8s .12s var(--ease-sakura) both}
+.art{isolation:isolate}
+.art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 20%,#ffffff0a 45%,transparent 70%);transform:translateX(-100%);animation:artShimmer 8s ease-in-out 1.2s infinite}
+.sun{animation:sunBreath 7s ease-in-out infinite}
+.sakura{animation:petalDrift 6s ease-in-out infinite alternate}
+.s2{animation-delay:-2s}.s3{animation-delay:-4s}.s4{animation-delay:-1s}
+.info article,.explore-intro,.committee-card,.officers-coming{transition:transform .24s var(--ease-sakura),border-color .24s ease,box-shadow .24s ease}
+.info article:hover{transform:translateY(-3px);border-color:#e8c77770;box-shadow:0 12px 28px #0002}
+.committee-card:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.primary{background-image:linear-gradient(110deg,transparent 0 40%,#ffffff20 50%,transparent 60%);background-size:220% 100%;background-position:100% 0}
+.primary:hover{background-position:0 0}
+#reader.open{animation:softRise .35s var(--ease-sakura) both}
+.pdf-page{transition:box-shadow .2s ease}
+.pdf-page:hover{box-shadow:0 6px 22px #0003}
+button:disabled{opacity:.6;cursor:wait;transform:none}
+@keyframes softRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sunBreath{0%,100%{transform:scale(1);box-shadow:0 0 60px #e94b5b35}50%{transform:scale(1.035);box-shadow:0 0 82px #e94b5b55}}
+@keyframes petalDrift{from{transform:translate3d(0,0,0) rotate(-5deg)}to{transform:translate3d(5px,-8px,0) rotate(8deg)}}
+@keyframes petalTurn{to{transform:rotate(360deg)}}
+@keyframes artShimmer{0%,65%,100%{transform:translateX(-110%)}82%{transform:translateX(110%)}}
+@media(max-width:760px){
+ nav{padding:16px 0;align-items:flex-start;flex-wrap:wrap}
+ .brand{font-size:.8rem}
+ .pill{font-size:.66rem;letter-spacing:.04em;max-width:100%;white-space:normal}
+ .hero{padding-top:32px}
+ .sun{width:130px;height:130px;top:28px}
+ .gate{transform:scale(.82);transform-origin:top center;margin-top:75px}
+ .art{min-height:215px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
 </style>
 </head>
 <body>
@@ -414,5 +460,26 @@ document.getElementById('officerLogoutBtn').addEventListener('click',async()=>{c
 setDeskReady();
 
 </script>
+
+<script>
+/* Small progressive enhancement only; all content and forms remain usable without it. */
+(function(){
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('IntersectionObserver' in window)) return;
+  const targets = document.querySelectorAll('.info article, .committee-card, .officers-coming');
+  targets.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(10px)'; });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.style.transition = 'opacity .45s ease, transform .45s cubic-bezier(.2,.75,.25,1)';
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    });
+  }, {threshold: 0.12, rootMargin: '0px 0px -24px 0px'});
+  targets.forEach(el => observer.observe(el));
+})();
+</script>
+
 </body>
 </html>
