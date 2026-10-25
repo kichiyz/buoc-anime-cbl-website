@@ -202,6 +202,22 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
 
+
+/* Playful but polished interaction layer: sakura, stationery and committee-themed accents. */
+.fx-petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2000}
+.fx-petal{position:absolute;top:-40px;left:var(--x);font-size:var(--size);opacity:0;filter:drop-shadow(0 3px 5px #0003);animation:petalDrift var(--duration) cubic-bezier(.25,.55,.4,1) forwards}
+@keyframes petalDrift{0%{transform:translate3d(0,-5vh,0) rotate(0deg);opacity:0}10%{opacity:.95}100%{transform:translate3d(var(--drift),110vh,0) rotate(var(--spin));opacity:0}}
+.fx-burst{position:fixed;inset:0;pointer-events:none;z-index:2001;overflow:hidden}
+.fx-token{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);animation:tokenPop 1.25s cubic-bezier(.15,.75,.25,1) forwards;filter:drop-shadow(0 3px 4px #0003)}
+@keyframes tokenPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-25deg)}18%{opacity:1;transform:translate(-50%,-65%) scale(1.2) rotate(8deg)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.7) rotate(var(--spin))}}
+.committee-card:active,.officer-card:active{transform:scale(.985)}
+.committee-modal.open .detail-block{animation:detailRise .38s both}
+.committee-modal.open .detail-block:nth-of-type(2){animation-delay:.04s}.committee-modal.open .detail-block:nth-of-type(3){animation-delay:.08s}.committee-modal.open .detail-block:nth-of-type(4){animation-delay:.12s}
+@keyframes detailRise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.officer-card .officer-square{transition:box-shadow .25s,transform .25s}
+.officer-card:hover .officer-square{transform:translateY(-2px);box-shadow:0 10px 28px #e8c77724}
+@media(prefers-reduced-motion:reduce){.fx-petal,.fx-token{display:none!important}.committee-modal.open .detail-block{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -371,14 +387,14 @@ const modal=document.getElementById('committeeModal');
 const modalBody=document.getElementById('modalBody');
 const modalClose=document.getElementById('modalClose');
 let lastFocused=null;
-function openCommittee(key){const c=committeeData[key];if(!c)return;lastFocused=document.activeElement;
+function openCommittee(key){const c=committeeData[key];if(!c)return;lastFocused=document.activeElement;if(window.BUOCFx)window.BUOCFx.petals(22);
  const roles=c.roles.map(role=>`<li>${role}</li>`).join('');
  const leader=(level,title,person,photo)=>`<div class="leader-card"><div class="leader-photo ${({'Kichi Yz M. Lozano':'photo-kichi','Avila Jhon Simiuon':'photo-avila','Ma. Vicenta V. Cabigao':'photo-vicenta','Nathaniel M. Lucasia':'photo-nathaniel','Darlene Keisha Marin. Lobete':'photo-keisha','Jesther A. Millete':'photo-jesther'}[person]||'')}">${photo?`<img src="${photo}" alt="Formal photograph of ${person}" loading="lazy">`:`<span class="photo-placeholder">PHOTO<br>COMING SOON</span>`}</div><strong>${person||'Coming Soon'}</strong><span class="leader-role">${title||''}</span><span class="leader-level">${level||'Position pending'}</span></div>`;
  const leaders=c.leaders||[{level:'Head',title:c.head,name:c.headName,photo:c.headPhoto},{level:'Co-head',title:c.cohead,name:c.coheadName,photo:c.coheadPhoto}];
  const leadersHtml=leaders.map(person=>leader(person.level,person.title,person.name,person.photo)).join('');
  modalBody.innerHTML=`<div class="modal-hero"><div class="committee-logo"><img src="${c.logo}" alt="${c.name} logo"></div><div><h2 id="modalTitle">${c.name}</h2><p>BUOC Standing Committee</p></div></div><section class="detail-block"><h3>Advocacy</h3><p>${c.advocacy}</p></section><section class="detail-block"><h3>Objectives</h3><p>${c.objective}</p></section><section class="detail-block"><h3>Official functions and roles</h3><ul>${roles}</ul></section><section class="detail-block"><h3>Committee leadership</h3><div class="leaders-grid">${leadersHtml}</div><p style="font-size:.82rem;margin-top:10px;color:var(--muted)">Photographs are included where available in the submitted directory files. Missing photographs are marked “Coming Soon.”</p></section>`;
  modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';modalClose.focus();}
-function openOfficer(id){const o=officerData.find(item=>item.id===id);if(!o)return;lastFocused=document.activeElement;
+function openOfficer(id){const o=officerData.find(item=>item.id===id);if(!o)return;lastFocused=document.activeElement;if(window.BUOCFx){if(id==='kichi')window.BUOCFx.burst(['🖊️','📝','📄','😤','✒️','📚'],22);else if(/president|vice|secretary|finance/i.test(o.position))window.BUOCFx.burst(['✨','🌸','✦','📌'],16);else window.BUOCFx.burst(['🌸','✿','✨','📎'],15);}
  const duties=o.duties.map(d=>`<li>${d}</li>`).join('');
  modalBody.innerHTML=`<div class="officer-profile-hero"><div class="officer-profile-photo">${o.photo?`<img src="${o.photo}" alt="${o.name}" loading="lazy">`:'<span class="photo-placeholder">PHOTO<br>COMING SOON</span>'}</div><div><span class="kicker">BUOC · OFFICER PROFILE</span><h2 id="modalTitle">${o.name}</h2><p>${o.position}</p><p>${o.committee}</p></div></div><section class="detail-block"><h3>Position and status</h3><p>${o.status}</p></section><section class="detail-block"><h3>Duties and responsibilities</h3><ul>${duties}</ul></section><section class="detail-block"><h3>Term of service</h3><p>${o.term}</p></section><section class="detail-block"><h3>Source / notes</h3><p>${o.source}</p></section><section class="detail-block"><h3>Additional profile details</h3><p>Other details, including appointment or election date, official contact information, and committee assignments beyond those confirmed above, can be added when verified by BUOC.</p></section>`;
  modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';modalClose.focus();}
@@ -489,5 +505,26 @@ setDeskReady();
 })();
 </script>
 
+<script>
+
+/* Tiny themed bursts keep the directory playful without interfering with navigation or content. */
+(function(){
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function burst(items,count=16){
+  if(reduced)return;
+  const layer=document.createElement('div');layer.className='fx-burst';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
+  for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-token';el.textContent=items[i%items.length];el.style.setProperty('--x',(18+Math.random()*64)+'%');el.style.setProperty('--y',(24+Math.random()*45)+'%');el.style.setProperty('--size',(18+Math.random()*17)+'px');el.style.setProperty('--dx',((Math.random()-.5)*260)+'px');el.style.setProperty('--dy',(-35-Math.random()*180)+'px');el.style.setProperty('--spin',((Math.random()-.5)*150)+'deg');layer.appendChild(el);}
+  window.setTimeout(()=>layer.remove(),1500);
+ }
+ function petals(count=24){
+  if(reduced)return;
+  const layer=document.createElement('div');layer.className='fx-petals';layer.setAttribute('aria-hidden','true');document.body.appendChild(layer);
+  for(let i=0;i<count;i++){const el=document.createElement('span');el.className='fx-petal';el.textContent=['🌸','✿','❀'][i%3];el.style.setProperty('--x',Math.random()*100+'%');el.style.setProperty('--size',(14+Math.random()*17)+'px');el.style.setProperty('--duration',(2.4+Math.random()*2.2)+'s');el.style.setProperty('--drift',((Math.random()-.5)*190)+'px');el.style.setProperty('--spin',((Math.random()-.5)*540)+'deg');el.style.animationDelay=(Math.random()*.35)+'s';layer.appendChild(el);}
+  window.setTimeout(()=>layer.remove(),5200);
+ }
+ window.BUOCFx={burst,petals};
+})();
+
+</script>
 </body>
 </html>
