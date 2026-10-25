@@ -412,7 +412,6 @@ modalClose.addEventListener('click',closeCommittee);modal.addEventListener('clic
   if(!window.pdfjsLib){status.textContent='Inline PDF viewer could not load.';fallback.hidden=false;return;}
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   let pdfDoc=null,rendered=0,failed=false;
-  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   async function renderPage(wrapper,pageNumber){
     if(wrapper.dataset.renderState!=='waiting'||!pdfDoc)return;
     wrapper.dataset.renderState='rendering';
@@ -448,7 +447,7 @@ modalClose.addEventListener('click',closeCommittee);modal.addEventListener('clic
         entries.forEach(entry=>{if(entry.isIntersecting){const wrap=entry.target;observer.unobserve(wrap);renderPage(wrap,Number(wrap.dataset.page));}});
       },{rootMargin:'700px 0px',threshold:0.01}):null;
       for(let pageNumber=1;pageNumber<=pdfDoc.numPages;pageNumber++){
-        const wrapper=document.createElement('div');wrapper.className='pdf-page-wrap';wrapper.dataset.page=String(pageNumber);wrapper.dataset.renderState='waiting';
+        const wrapper=document.createElement('div');wrapper.className='pdf-page-wrap';wrapper.style.aspectRatio='0.707 / 1';wrapper.dataset.page=String(pageNumber);wrapper.dataset.renderState='waiting';
         const canvas=document.createElement('canvas');canvas.className='pdf-page';canvas.setAttribute('role','img');canvas.setAttribute('aria-label','Page '+pageNumber+' of '+pdfDoc.numPages);canvas.style.width='100%';canvas.style.height='auto';canvas.style.background='#fff';
         const label=document.createElement('div');label.className='pdf-page-label';label.textContent='Page '+pageNumber+' of '+pdfDoc.numPages;
         wrapper.append(canvas,label);pages.append(wrapper);
@@ -460,7 +459,7 @@ modalClose.addEventListener('click',closeCommittee);modal.addEventListener('clic
       fallback.hidden=false;
     }
   })();
-})();;
+})();
 
 // Concern Desk: set these two public project values in assets/concern-config.js.
 // The Supabase anon/publishable key is intended for browser use; never put service_role keys here.
