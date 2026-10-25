@@ -128,6 +128,14 @@ footer span:last-child{color:var(--gold)}
 .org-tier{display:flex;justify-content:center;align-items:stretch;gap:clamp(10px,2vw,22px);flex-wrap:wrap;position:relative;padding:16px 0}
 .org-tier + .org-tier:before{content:"";position:absolute;left:50%;top:-1px;height:17px;border-left:2px dashed #e8c77799}
 .org-tier-label{width:100%;text-align:center;color:var(--muted);font-size:.77rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase;margin:0 0 3px}
+.org-subtier{display:flex;justify-content:center;align-items:stretch;gap:clamp(10px,2vw,22px);width:100%;flex-wrap:wrap;position:relative}
+.org-subtier .org-node{width:clamp(135px,19vw,190px)}
+.org-subtier.executive-pair{margin-top:2px}
+.org-subtier.secretariat-pair{margin-top:-4px}
+.org-subtier.secretariat-pair:before{content:"";height:14px;border-left:2px dashed #e8c77799;position:absolute;top:-15px;left:50%}
+.org-subtier.finance-pair{margin-top:2px}
+.org-subtier.pio-pair{margin-top:2px}
+
 .org-node{width:clamp(135px,19vw,190px);min-width:0;padding:10px;border:1px solid #ffffff2b;border-radius:15px;background:linear-gradient(145deg,#202d50,#121b35);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;white-space:normal}
 .org-node.president{border-color:#e8c777a8;background:linear-gradient(145deg,#50334f,#192342);width:clamp(170px,25vw,230px)}
 .org-node .org-photo{width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#fff;border:1px solid #ffffff25;display:grid;place-items:center;color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.05em;padding:8px}
@@ -236,13 +244,21 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
 <div class="org-chart" aria-label="Interactive BUOC organization chart">
  <div class="org-tier"><div class="org-tier-label">Organizational Leadership</div><button class="org-node president" type="button" data-officer="ira"><span class="org-photo"><img src="assets/officers/ira.webp" alt="Ira Shain A. Cañaveral" loading="lazy"></span><strong>Ira Shain A. Cañaveral</strong><small>President</small></button></div>
  <div class="org-tier"><div class="org-tier-label">Executive and Committee Officers</div>
-  <button class="org-node" type="button" data-officer="kimberly"><span class="org-photo"><img src="assets/officers/kimberly.webp" alt="Kimberly Suzanne H. Noble" loading="lazy"></span><strong>Kimberly Suzanne H. Noble</strong><small>External Vice President</small></button>
-  <button class="org-node" type="button" data-officer="travis"><span class="org-photo">PHOTO<br>COMING SOON</span><strong>Travis B. Brioso</strong><small>Internal Vice President</small></button>
-  <button class="org-node" type="button" data-officer="kichi"><span class="org-photo"><img src="assets/officers/kichi.webp" alt="Kichi Yz M. Lozano" loading="lazy"></span><strong>Kichi Yz M. Lozano</strong><small>Secretary General</small></button>
-  <button class="org-node" type="button" data-officer="avila"><span class="org-photo"><img src="assets/officers/avila.webp" alt="Avila Jhon Simiuon" loading="lazy"></span><strong>Avila Jhon Simiuon</strong><small>Deputy Secretary General</small></button>
-  <button class="org-node" type="button" data-officer="vicenta"><span class="org-photo"><img src="assets/officers/ma-vicenta.webp" alt="Ma. Vicenta V. Cabigao" loading="lazy"></span><strong>Ma. Vicenta V. Cabigao</strong><small>Finance General</small></button>
-  <button class="org-node" type="button" data-officer="nathaniel"><span class="org-photo"><img src="assets/officers/nathaniel.webp" alt="Nathaniel M. Lucasia" loading="lazy"></span><strong>Nathaniel M. Lucasia</strong><small>Deputy Finance General</small></button>
-  <button class="org-node" type="button" data-officer="pio"><span class="org-photo">PROFILE<br>TO BE ADDED</span><strong>Name to be added</strong><small>Public Information Officer</small></button>
+  <div class="org-subtier executive-pair" aria-label="Vice Presidents">
+   <button class="org-node" type="button" data-officer="kimberly"><span class="org-photo"><img src="assets/officers/kimberly.webp" alt="Kimberly Suzanne H. Noble" loading="lazy"></span><strong>Kimberly Suzanne H. Noble</strong><small>External Vice President</small></button>
+   <button class="org-node" type="button" data-officer="travis"><span class="org-photo">PHOTO<br>COMING SOON</span><strong>Travis B. Brioso</strong><small>Internal Vice President</small></button>
+  </div>
+  <div class="org-subtier secretariat-pair" aria-label="Secretariat leadership">
+   <button class="org-node" type="button" data-officer="kichi"><span class="org-photo"><img src="assets/officers/kichi.webp" alt="Kichi Yz M. Lozano" loading="lazy"></span><strong>Kichi Yz M. Lozano</strong><small>Secretary General</small></button>
+   <button class="org-node" type="button" data-officer="avila"><span class="org-photo"><img src="assets/officers/avila.webp" alt="Avila Jhon Simiuon" loading="lazy"></span><strong>Avila Jhon Simiuon</strong><small>Deputy Secretary General</small></button>
+  </div>
+  <div class="org-subtier finance-pair" aria-label="Finance officers">
+   <button class="org-node" type="button" data-officer="vicenta"><span class="org-photo"><img src="assets/officers/ma-vicenta.webp" alt="Ma. Vicenta V. Cabigao" loading="lazy"></span><strong>Ma. Vicenta V. Cabigao</strong><small>Finance General</small></button>
+   <button class="org-node" type="button" data-officer="nathaniel"><span class="org-photo"><img src="assets/officers/nathaniel.webp" alt="Nathaniel M. Lucasia" loading="lazy"></span><strong>Nathaniel M. Lucasia</strong><small>Deputy Finance General</small></button>
+  </div>
+  <div class="org-subtier pio-pair" aria-label="Public information">
+   <button class="org-node" type="button" data-officer="pio"><span class="org-photo">PROFILE<br>TO BE ADDED</span><strong>Name to be added</strong><small>Public Information Officer</small></button>
+  </div>
  </div>
  <div class="org-branches">
   <section class="org-branch"><h3>Business Managers · Ways and Means</h3><div class="org-tier">
