@@ -149,8 +149,11 @@ serve(async (req) => {
       const rows = await lookup.json();
       const concern = rows[0];
       if (concern) {
+        reference = concern.reference_code ?? "";
+        console.log("BUOC notification workflow started", { workflow: "officer_reply", reference });
         const safeRef = esc(concern.reference_code);
         await sendEmail(concern.submitter_email, `BUOC replied to your concern — ${concern.reference_code}`, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746"><p>Hello ${esc(concern.submitter_name)},</p><p>A BUOC officer replied to your concern <strong>${safeRef}</strong> (${esc(concern.subject)}).</p><blockquote style="border-left:3px solid #73b7ff;padding-left:12px">${esc(record.body).replace(/\n/g, "<br>")}</blockquote><p>Use your reference number and email address to check your concern's progress.</p><p>This is an automated message; please do not reply.</p></div>`);
+        console.log("BUOC submitter reply notification accepted by Resend", { reference });
         await sendOfficerEmails(`Officer reply posted: ${concern.reference_code}`, `<div style="font:16px/1.6 Arial,sans-serif;color:#182746"><p>An officer reply was posted to <strong>${safeRef}</strong> — ${esc(concern.subject)}.</p><p>Reply: ${esc(record.body).replace(/\n/g, "<br>")}</p></div>`);
       }
     } else {
