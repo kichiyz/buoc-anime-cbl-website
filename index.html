@@ -228,6 +228,69 @@ button:disabled{opacity:.6;cursor:wait;transform:none}
 .officer-card:hover .officer-square{transform:translateY(-2px);box-shadow:0 10px 28px #e8c77724}
 @media(prefers-reduced-motion:reduce){.fx-petal,.fx-token{display:none!important}.committee-modal.open .detail-block{animation:none!important}}
 
+
+/* Cross-device alignment pass: keep the org chart centered even when grid/flex
+   columns collapse on narrow Android, iOS, tablet, and desktop viewports. */
+#officerDirectory{width:100%;min-width:0;margin-inline:auto;text-align:center}
+#officerDirectory>.org-chart{width:100%;max-width:100%;margin-inline:auto}
+#officerDirectory .org-tier,
+#officerDirectory .org-subtier{margin-inline:auto}
+#officerDirectory .org-node{margin-inline:auto;text-align:center}
+#officerDirectory .org-tier-label,
+#officerDirectory .org-note,
+#officerDirectory .org-branch h3{text-align:center}
+#officerDirectory .org-branches{width:100%;justify-items:stretch}
+#officerDirectory .org-branch{min-width:0;text-align:center}
+#officerDirectory .org-branch .org-tier{justify-content:center;justify-items:center}
+#officerDirectory .org-node strong,
+#officerDirectory .org-node small{width:100%;text-align:center}
+#officerDirectory .officer-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),240px));justify-content:center;justify-items:center;width:100%}
+#officerDirectory .officer-card{width:100%;max-width:240px;text-align:center;align-items:center}
+#officerDirectory .officer-square{width:100%;max-width:100%}
+#officerDirectory .officer-card strong,
+#officerDirectory .officer-position,
+#officerDirectory .card-cta{text-align:center;margin-inline:auto}
+#officerDirectory .org-photo img{display:block;margin:auto}
+
+/* Center the committee identity consistently; keep long role descriptions readable. */
+#committeeModal .modal-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+#committeeModal .modal-hero>div:last-child{width:100%;min-width:0;text-align:center}
+#committeeModal .modal-hero h2,
+#committeeModal .modal-hero p{text-align:center;margin-inline:auto}
+#committeeModal .modal-hero h2{max-width:100%;overflow-wrap:anywhere}
+#committeeModal .detail-block>h3{text-align:center}
+#committeeModal .leaders-grid{justify-items:center}
+#committeeModal .leader-card{width:100%;text-align:center}
+#committeeModal .leader-card strong,
+#committeeModal .leader-card span{text-align:center}
+
+/* Small screens: single-column officer branches use a fixed card measure so
+   the cards sit on the center line instead of stretching edge-to-edge. */
+@media(max-width:700px){
+ #officerDirectory .org-chart{padding:clamp(10px,3vw,14px)}
+ #officerDirectory .org-tier{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:12px}
+ #officerDirectory .org-tier>.org-tier-label{width:100%;margin-inline:auto}
+ #officerDirectory .org-subtier{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),190px));justify-content:center;justify-items:center;align-items:stretch;width:100%;gap:12px}
+ #officerDirectory .org-subtier .org-node,
+ #officerDirectory .org-tier>.org-node,
+ #officerDirectory .org-node.president{width:min(100%,210px);max-width:210px;margin-inline:auto}
+ #officerDirectory .org-branches{grid-template-columns:minmax(0,1fr);justify-items:center}
+ #officerDirectory .org-branch{width:100%;max-width:100%}
+ #officerDirectory .org-branch .org-tier{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),180px));justify-content:center;justify-items:center;align-items:stretch}
+ #officerDirectory .org-branch .org-node{width:100%;max-width:180px;margin-inline:auto}
+ #officerDirectory .officer-grid{grid-template-columns:minmax(0,240px);justify-content:center;justify-items:center}
+ #officerDirectory .officer-card{width:100%;max-width:240px;margin-inline:auto}
+ #committeeModal .modal-hero{align-items:center;text-align:center}
+ #committeeModal .modal-hero .committee-logo{margin-inline:auto}
+ #committeeModal .detail-block>h3{text-align:center}
+}
+@media(max-width:360px){
+ #officerDirectory .org-subtier{grid-template-columns:minmax(0,1fr)}
+ #officerDirectory .org-subtier .org-node,
+ #officerDirectory .org-tier>.org-node,
+ #officerDirectory .org-node.president{width:100%;max-width:220px}
+ #officerDirectory .org-branch .org-tier{grid-template-columns:minmax(0,1fr)}
+}
 </style>
 </head>
 <body>
